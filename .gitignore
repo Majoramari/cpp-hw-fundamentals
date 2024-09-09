@@ -1,0 +1,24 @@
+# CMake build directories
+cmake-build-debug/
+cmake-build-release/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+
+# Executables and object files
+*.o
+*.exe
+*.out
+*.a
+*.so
+
+# CLion and IDE settings
+.idea/
+
+# Logs and temporary files
+*.log
+*.tmp
+*~
+
+# Backup files
+*.bak
