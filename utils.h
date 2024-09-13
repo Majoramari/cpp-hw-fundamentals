@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <limits>
+#include <random>
 
 using namespace std;
 
@@ -18,7 +19,15 @@ namespace utils {
 
 			cin >> number;
 		}
-
 		return number;
+	}
+
+	inline int gen_random_int(const int &min, const int &max) {
+		random_device rd;
+		mt19937 generator(rd());
+
+		uniform_int_distribution distribution(min, max);
+
+		return distribution(generator);
 	}
 }
