@@ -35,13 +35,13 @@ void load_data_from_file_to_vector(const string &file_name, vector<string> &file
 	save_vector_to_file(file_name, file_content);
 }
 
-void delete_record_from_file(const string &file_name, const string &record) {
+void update_record_from_file(const string &file_name, const string &from, const string &to) {
 	vector<string> file_content;
 	load_data_from_file_to_vector(file_name, file_content);
 
 	for (string &line: file_content) {
-		if (line == record) {
-			line = "";
+		if (line == from) {
+			line = to;
 		}
 	}
 
@@ -68,7 +68,7 @@ int main() {
 	cout << "File Content before delete." << endl;
 	print_file_content("myfile.txt");
 
-	delete_record_from_file("myfile.txt", "Ali");
+	update_record_from_file("myfile.txt", "Ali", "Omer");
 
 	cout << endl << endl << "File Content after delete." << endl;
 	print_file_content("myfile.txt");
