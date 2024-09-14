@@ -6,9 +6,9 @@
 using namespace std;
 
 namespace utils {
-	inline int get_number() {
+	inline int get_number(const string &message = "Enter a number: ") {
 		int number;
-		cout << "Enter a number: ";
+		cout << message;
 		cin >> number;
 
 		while (cin.fail()) {
