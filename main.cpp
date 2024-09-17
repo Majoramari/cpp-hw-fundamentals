@@ -107,6 +107,16 @@ void sum_two_arrays(const int arr[100], const int arr2[100], int arr3[100], cons
 	}
 }
 
+void find_num(int arr[100], int &arr_length, const int target_number) {
+	for (int i = 0; i < arr_length; i++) {
+		if (arr[i] == target_number) {
+			cout << "Found " << arr[i] << " at index " << i << endl;
+			return;
+		}
+	}
+	cout << "There is no such number " << endl;
+}
+
 void print_array(int arr[100], const int arr_length) {
 	for (int i = 0; i < arr_length; i++)
 		cout << arr[i] << " ";
@@ -118,16 +128,17 @@ void print_array_keys(string arr[100], const int arr_length) {
 }
 
 int main() {
-	string arr[100];
-	int arr_length;
+	int arr[100], arr_length;
 
-	cout << "Enter number of elements: ";
-	cin >> arr_length;
-
-	fill_array_with_keys(arr, arr_length);
+	fill_array_with_random_numbers(arr, arr_length);
 
 	cout << endl << "Array elements: " << endl;
-	print_array_keys(arr, arr_length);
+	print_array(arr, arr_length);
+
+	cout << endl << endl;
+
+	const int target_number = utils::get_number("Enter a number to search for: ");
+	find_num(arr, arr_length, target_number);
 
 	return 0;
 }
