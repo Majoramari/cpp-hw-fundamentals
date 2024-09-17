@@ -37,7 +37,7 @@ char get_random_character(const char_type char_type) {
 	return '0';
 }
 
-string generate_word(char_type char_type, short length) {
+string generate_word(const char_type char_type, const short length) {
 	string word;
 	for (int i = 1; i <= length; i++) {
 		word += get_random_character(char_type);
