@@ -117,6 +117,19 @@ void find_num(int arr[100], int &arr_length, const int target_number) {
 	cout << "There is no such number " << endl;
 }
 
+void fill_array_as_needed(int arr[100], int &arr_length) {
+	bool add_more = true;
+	do {
+		const int number = utils::get_number();
+
+		arr_length++;
+		arr[arr_length - 1] = number;
+
+		cout << "Do you want to add more number? 0=No 1=Yes";
+		cin >> add_more;
+	} while (add_more);
+}
+
 void print_array(int arr[100], const int arr_length) {
 	for (int i = 0; i < arr_length; i++)
 		cout << arr[i] << " ";
@@ -128,17 +141,12 @@ void print_array_keys(string arr[100], const int arr_length) {
 }
 
 int main() {
-	int arr[100], arr_length;
+	int arr[100], arr_length = 0;
 
-	fill_array_with_random_numbers(arr, arr_length);
+	fill_array_as_needed(arr, arr_length);
 
 	cout << endl << "Array elements: " << endl;
 	print_array(arr, arr_length);
-
-	cout << endl << endl;
-
-	const int target_number = utils::get_number("Enter a number to search for: ");
-	find_num(arr, arr_length, target_number);
 
 	return 0;
 }
