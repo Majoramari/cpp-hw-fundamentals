@@ -4,6 +4,13 @@
 
 using namespace std;
 
+enum char_type {
+	small_letter = 1,
+	capital_letter = 2,
+	special_character = 3,
+	digit = 4
+};
+
 void fill_array_with_random_numbers(int arr[100], int &arr_length) {
 	arr_length = utils::get_number("Enter number of elements: ");
 
@@ -14,6 +21,36 @@ void fill_array_with_random_numbers(int arr[100], int &arr_length) {
 void fill_order_array(int arr[100], const int &arr_length) {
 	for (int i = 0; i < arr_length + 1; i++)
 		arr[i] = i + 1;
+}
+
+char get_random_character(const char_type char_type) {
+	switch (char_type) {
+		case small_letter:
+			return static_cast<char>(utils::gen_random_int(97, 122));
+		case capital_letter:
+			return static_cast<char>(utils::gen_random_int(65, 90));
+		case special_character:
+			return static_cast<char>(utils::gen_random_int(33, 47));
+		case digit:
+			return static_cast<char>(utils::gen_random_int(48, 57));
+	}
+	return '0';
+}
+
+string generate_word(char_type char_type, short length) {
+	string word;
+	for (int i = 1; i <= length; i++) {
+		word += get_random_character(char_type);
+	}
+	return word;
+}
+
+string generate_key() {
+	string key = generate_word(capital_letter, 4) + "-";
+	key = key + generate_word(capital_letter, 4) + "-";
+	key = key + generate_word(capital_letter, 4) + "-";
+	key = key + generate_word(capital_letter, 4);
+	return key;
 }
 
 void swap(int &num_one, int &num_two) noexcept {
@@ -39,6 +76,12 @@ void fill_two_arrays_with_random_numbers(int arr[100], int arr2[100], int &arr_l
 
 	for (int i = 0; i < arr_length; i++)
 		arr2[i] = utils::gen_random_int(1, 100);
+}
+
+void fill_array_with_keys(string arr[100], const int &arr_length) {
+	for (int i = 0; i < arr_length; i++) {
+		arr[i] = generate_key();
+	}
 }
 
 void copy_prime_numbers(int main_array[100], const int arr_length, int prime_array[100], int &arr2_length) {
@@ -69,22 +112,22 @@ void print_array(int arr[100], const int arr_length) {
 		cout << arr[i] << " ";
 }
 
+void print_array_keys(string arr[100], const int arr_length) {
+	for (int i = 0; i < arr_length; i++)
+		cout << "Array[" << i << "]: " << arr[i] << endl;
+}
+
 int main() {
-	int arr[100], arr2[100], arr_length;
+	string arr[100];
+	int arr_length;
 
 	cout << "Enter number of elements: ";
 	cin >> arr_length;
 
-	fill_order_array(arr, arr_length);
-	cout << endl << "Array: " << endl;
-	print_array(arr, arr_length);
+	fill_array_with_keys(arr, arr_length);
 
-	cout << endl << endl;
-
-	copy_reversed_array(arr, arr2, arr_length);
-
-	cout << endl << "Reversed array: " << endl;
-	print_array(arr2, arr_length);
+	cout << endl << "Array elements: " << endl;
+	print_array_keys(arr, arr_length);
 
 	return 0;
 }
