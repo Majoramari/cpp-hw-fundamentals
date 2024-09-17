@@ -130,6 +130,24 @@ void fill_array_as_needed(int arr[100], int &arr_length) {
 	} while (add_more);
 }
 
+void add_array_element(const int number, int arr[100], int &arr_length) {
+	arr_length++;
+	arr[arr_length - 1] = number;
+}
+
+void copy_array(int arr_source[100], int arr_destination[100], const int arr_length, int &arr_destination_length) {
+	for (int i = 0; i < arr_length; i++)
+		add_array_element(arr_source[i], arr_destination, arr_destination_length);
+}
+
+void copy_odd_to_array(int arr_source[100], int arr_destination[100], const int arr_length,
+                       int &arr_destination_length) {
+	for (int i = 0; i < arr_length; i++) {
+		if (arr_source[i] % 2 != 0)
+			add_array_element(arr_source[i], arr_destination, arr_destination_length);
+	}
+}
+
 void print_array(int arr[100], const int arr_length) {
 	for (int i = 0; i < arr_length; i++)
 		cout << arr[i] << " ";
@@ -141,12 +159,22 @@ void print_array_keys(string arr[100], const int arr_length) {
 }
 
 int main() {
-	int arr[100], arr_length = 0;
+	int arr[100], arr2[100], arr_length, arr2_length = 0;
 
-	fill_array_as_needed(arr, arr_length);
+	fill_array_with_random_numbers(arr, arr_length);
 
-	cout << endl << "Array elements: " << endl;
+	cout << endl;
+
+	cout << "Array after filling random numbers" << endl;
 	print_array(arr, arr_length);
+
+	cout << endl << endl;
+
+	copy_odd_to_array(arr, arr2, arr_length, arr2_length);
+	cout << "Array after copying odd numbers" << endl;
+	print_array(arr2, arr2_length);
+
+	cout << endl;
 
 	return 0;
 }
