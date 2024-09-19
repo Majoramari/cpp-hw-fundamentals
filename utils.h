@@ -6,9 +6,9 @@
 using namespace std;
 
 namespace utils {
-	inline int get_number() {
+	inline int get_number(const string &message = "Enter a number: ") {
 		int number;
-		cout << "Enter a number: ";
+		cout << message;
 		cin >> number;
 
 		while (cin.fail()) {
@@ -20,6 +20,22 @@ namespace utils {
 			cin >> number;
 		}
 		return number;
+	}
+
+	inline string get_string(const string &message = "Enter a string: ") {
+		string input;
+		cout << message;
+		getline(cin, input);
+
+		while (cin.fail()) {
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+			cout << "Invalid string, try again: ";
+			getline(cin, input);
+		}
+
+		return input;
 	}
 
 	inline int gen_random_int(const int &min, const int &max) {
