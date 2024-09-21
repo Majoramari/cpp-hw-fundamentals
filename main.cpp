@@ -3,37 +3,44 @@
 
 using namespace std;
 
-string join_string(vector<string> strings, string delimiter) {
-	string result;
+vector<string> split(const string &str, const string &delimiter) {
+	vector<string> tokens;
+	string::size_type start = 0, end;
 
-	for (string &s: strings) {
-		result += s + delimiter;
+	while ((end = str.find(delimiter, start)) != string::npos) {
+		if (string token = str.substr(start, end - start); !token.empty())
+			tokens.push_back(token);
+
+		start = end + delimiter.length();
 	}
 
-	return result.substr(0, result.length() - delimiter.length());
+	if (start < str.length())
+		tokens.push_back(str.substr(start));
+
+	return tokens;
 }
 
-string join_string(string arr[100], const int arr_length, string delimiter) {
+
+string reverse_words(const string &str) {
+	vector<string> words = split(str, " ");
 	string result;
 
-	for (int i = 0; i < arr_length; i++) {
-		result += arr[i] + delimiter;
+	auto iterator = words.end();
+
+	while (iterator != words.begin()) {
+		--iterator;
+		result += *iterator + " ";
 	}
 
-	return result.substr(0, result.length() - delimiter.length());
+	result = result.substr(0, result.length() - 1);
+
+	return result;
 }
 
 int main() {
-	const vector<string> vector_string = {"Muhannad", "Hassan", "Elbolaky"};
-	string arr[100]{"Muhannad", "Hassan", "Elbolaky"};
+	const string str = "Hello, My name is Muhannad & my nickname is Major Amari";
 
-	cout << "Vector after join: " << endl;
-	cout << join_string(vector_string, ", ") << endl;
-
-	cout << endl;
-
-	cout << "Array after join: " << endl;
-	cout << join_string(arr, 3, ", ") << endl;
+	cout << reverse_words(str) << endl;
 
 	return 0;
 }
