@@ -26,12 +26,7 @@ The function removes punctuation from a given string and returns a new string wi
 
 - **Return the result**:
     - Once the loop has finished checking all characters, return the `result` string.
-
-### **Note**:
-- **Concept**: This function focuses on filtering unwanted parts from a string.
-- **Key functions**: Loops (`for`), conditions (`if`), character-checking functions like `ispunct(c)`.
-- **Modularity**: Each part (input, processing, output) is neatly separated, which makes it easier to understand.
-
+  
 ```cpp
 string remove_punctuation(const string &str) {
 	string result;
