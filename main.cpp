@@ -1,8 +1,10 @@
-#include <fstream>
+#include <algorithm>
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 
 #include "utils.h"
+
 using namespace std;
 
 const string FILE_NAME = "client.txt";
@@ -100,6 +102,28 @@ void return_to_menu() {
 	show_main_menu();
 }
 
+bool client_already_exists(const string &account_number) {
+	fstream file;
+
+	file.open(FILE_NAME, ios::in);
+
+	if (file.is_open()) {
+		string line;
+		Client client;
+
+		while (getline(file, line)) {
+			client = decompress_client(line, "#//#");
+
+			if (client.account_number == account_number) {
+				file.close();
+				return true;
+			}
+		}
+		file.close();
+	}
+	return false;
+}
+
 void show_all_clients() {
 	vector<Client> clients = load_clients_data();
 
@@ -129,12 +153,13 @@ void show_all_clients() {
 void add_client() {
 	Client client;
 
-	cout << "---------------------------------" << endl;
-	cout << "\tAdd new client" << endl;
-	cout << "---------------------------------" << endl;
-
 	cout << endl << "Enter new client name: ";
 	getline(cin >> ws, client.name);
+
+	while(client_already_exists(client.account_number)) {
+		cout << endl<<"Client with ["<< client.account_number << "] already exists, Enter another Account No" << endl;
+		getline(cin >> ws, client.account_number);
+	}
 
 	cout << endl << "Enter account number: ";
 	cin >> client.account_number;
@@ -149,6 +174,24 @@ void add_client() {
 	cin >> client.account_balance;
 
 	save_client_data(client);
+}
+
+void prompt_to_add_clients() {
+	char add_more = 'y';
+
+	do {
+		add_client();
+		cout << "Client added successfully, do you want to add more? Y/N: ";
+		cin >> add_more;
+	} while (tolower(add_more) == 'y');
+}
+
+void show_add_new_clients() {
+	cout << "---------------------------------" << endl;
+	cout << "\tAdd new client" << endl;
+	cout << "---------------------------------" << endl;
+
+	prompt_to_add_clients();
 }
 
 enum class client_option {
@@ -168,7 +211,7 @@ void perform_option(const client_option option) {
 			return_to_menu();
 			break;
 		case client_option::add:
-			add_client();
+			show_add_new_clients();
 			return_to_menu();
 			break;
 		case client_option::remove:
