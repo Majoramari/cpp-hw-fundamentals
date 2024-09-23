@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 using namespace std;
 
@@ -14,7 +15,7 @@ struct Client {
 Client create_client() {
 	Client client;
 	cout << "Enter account name: ";
-	cin >> client.name;
+	getline(cin >> ws, client.name);
 
 	cout << "Enter account number: ";
 	cin >> client.account_number;
@@ -62,7 +63,7 @@ string convert_from_record(const Client &client, const string &separator) {
 
 Client convert_from_line(const string &line, const string &separator) {
 	Client client;
-	vector<string> client_data = split(line, separator);
+	const vector<string> client_data = split(line, separator);
 
 	client.name = client_data[0];
 	client.account_number = stoi(client_data[1]);
@@ -81,12 +82,38 @@ void print_client_data(const Client &client) {
 	cout << "Balance: " << client.balance << endl;
 }
 
+void save_client_data(const string &file_name, const string &client_data) {
+	fstream file;
+	file.open(file_name, ios::out | ios::app);
+
+	if (file.is_open()) {
+		file << client_data << endl;
+		file.close();
+	}
+}
+
+void add_new_client() {
+	const Client client = create_client();
+	const string client_data = convert_from_record(client, "#//#");
+
+	save_client_data("client.txt", client_data);
+}
+
+void add_client() {
+	char add_more = 'Y';
+
+	do {
+		system("clear");
+		cout << "Client info: " << endl << endl;
+
+		add_new_client();
+
+		cout << endl << "Do you want to save another? ";
+		cin >> add_more;
+	} while (toupper(add_more) == 'Y');
+}
+
 int main() {
-	const string line = "Muhannad#//#512#//#2848#//#10966#//#200.000000";
-
-	const Client client = convert_from_line(line, "#//#");
-
-	print_client_data(client);
-
+	add_client();
 	return 0;
 }
