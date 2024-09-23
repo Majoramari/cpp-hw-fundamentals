@@ -113,7 +113,32 @@ void add_client() {
 	} while (toupper(add_more) == 'Y');
 }
 
+vector<Client> load_clients(const string &file_name) {
+	vector<Client> clients;
+	fstream file;
+	file.open(file_name, ios::in);
+
+	if (file.is_open()) {
+		string line;
+		Client client;
+
+		while (getline(file, line)) {
+			client = convert_from_line(line, "#//#");
+			clients.push_back(client);
+		}
+		file.close();
+	}
+	return clients;
+}
+
+
 int main() {
-	add_client();
+	vector<Client> clients = load_clients("client.txt");
+
+	for (const Client &client: clients) {
+		print_client_data(client);
+		cout << endl << endl;
+	}
+
 	return 0;
 }
