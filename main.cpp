@@ -91,6 +91,8 @@ void save_client_data(const Client &client) {
 
 void show_main_menu();
 
+void transaction_menu();
+
 void print_client_record(const Client &client) {
 	cout << "| " << setw(20) << left << client.name
 			<< "| " << setw(15) << left << client.account_number
@@ -275,7 +277,7 @@ bool remove_client_by_account_number(const string &account_number) {
 
 string get_account_number() {
 	string account_number;
-	cout << "Enter Account Number: " << endl;
+	cout << "Enter Account Number: ";
 	cin >> account_number;
 	return account_number;
 }
@@ -361,6 +363,183 @@ void find_client_menu() {
 		cout << endl << endl << "Client not found.";
 }
 
+bool update_client_balance(const string &account_number, const double &amount) {
+	char answer = 'n';
+	cout << "Are you sure you want to perform this action? Y/N:";
+	cin >> answer;
+
+	if (tolower(answer) == 'y') {
+		vector<Client> clients = load_clients_data();
+		for (Client &c: clients) {
+			if (c.account_number == account_number) {
+				c.account_balance += amount;
+				save_clients_data(clients);
+
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+void display_deposit_menu() {
+	system("clear");
+	cout << "================================" << endl;
+	cout << "\tDeposit menu" << endl;
+	cout << "================================" << endl;
+}
+
+void deposit_menu() {
+	display_deposit_menu();
+
+	Client client;
+	string account_number = get_account_number();
+
+	while (!find_client(account_number, client)) {
+		display_deposit_menu();
+		cout << endl << "Client with [" << account_number << "] not found." << endl << endl;
+		account_number = get_account_number();
+	}
+
+	display_deposit_menu();
+
+	print_client(client);
+
+	double amount;
+	cout << "Enter deposit amount: ";
+	cin >> amount;
+
+	if (update_client_balance(account_number, amount)) {
+		cout << "Deposit successfully." << endl << endl;
+	}
+}
+
+void display_withdraw_menu() {
+	system("clear");
+	cout << "================================" << endl;
+	cout << "\tWithdraw menu" << endl;
+	cout << "================================" << endl;
+}
+
+void withdraw_menu() {
+	display_withdraw_menu();
+
+	Client client;
+	string account_number = get_account_number();
+
+	while (!find_client(account_number, client)) {
+		display_withdraw_menu();
+		cout << endl << "Client with [" << account_number << "] not found." << endl << endl;
+		account_number = get_account_number();
+	}
+
+	display_withdraw_menu();
+
+	print_client(client);
+
+	double amount;
+	cout << "Enter withdraw amount: ";
+	cin >> amount;
+
+	while (amount > client.account_balance) {
+		display_withdraw_menu();
+		print_client(client);
+
+		cout << endl << "Amount exceeds the balance!" << endl;
+		cout << "Enter withdraw amount: ";
+		cin >> amount;
+	}
+
+	if (update_client_balance(account_number, amount * -1)) {
+		cout << "Withdrawal successfully." << endl << endl;
+	}
+}
+
+void print_client_record_balance_line(const Client &client) {
+	cout << "| " << setw(20) << left << client.name
+			<< "| " << setw(15) << left << client.account_number
+			<< "| " << setw(12) << left << fixed << setprecision(2) << client.account_balance;
+}
+
+void display_total_balance() {
+	vector<Client> clients = load_clients_data();
+
+	cout << endl << "\t\t\tBalances list: (" << clients.size() << ") Clients.";
+	cout << endl << "-------------------------------------------------------" << endl;
+	cout << "| " << left << setw(20) << "Name"
+			<< "| " << left << setw(15) << "Account No"
+			<< "| " << left << setw(12) << "Balance" << " |" << endl;
+	cout << "-------------------------------------------------------" << endl;
+
+	if (clients.empty()) {
+		cout << endl << endl << "No clients found." << endl << endl;
+	} else {
+		double total_balance = 0;
+		for (const Client &c: clients) {
+			print_client_record_balance_line(c);
+			total_balance += c.account_balance;
+			cout << " |" << endl;
+		}
+	}
+
+	cout << "-------------------------------------------------------" << endl;
+}
+
+enum class transactions_option {
+	deposit = 1,
+	withdraw,
+	total_balances,
+	main_menu,
+};
+
+void return_to_transactions_menu() {
+	system("read -n 1 -s -p \"Press any key to go back to main menu...\"");
+	transaction_menu();
+};
+
+void perform_transactions_option(const transactions_option option) {
+	system("clear");
+
+	switch (option) {
+		case transactions_option::deposit:
+			deposit_menu();
+			return_to_transactions_menu();
+			break;
+		case transactions_option::withdraw:
+			withdraw_menu();
+			return_to_menu();
+			break;
+		case transactions_option::total_balances:
+			display_total_balance();
+			return_to_menu();
+			break;
+		case transactions_option::main_menu:
+			show_main_menu();
+			break;
+	}
+}
+
+void transaction_menu() {
+	system("clear");
+
+	cout << "================================" << endl;
+	cout << "\tTransaction menu" << endl;
+	cout << "================================" << endl;
+	cout << "\t[1] Deposit." << endl;
+	cout << "\t[2] Withdraw." << endl;
+	cout << "\t[3] Total Balances." << endl;
+	cout << "\t[4] Main Menu." << endl;
+	cout << "================================" << endl;
+
+	perform_transactions_option(
+		static_cast<transactions_option>(
+			utils::get_number(
+				"Choose what do you want to do [1 to 4]: "
+			)
+		)
+	);
+}
+
 void exit_app() {
 	cout << "---------------------------------" << endl;
 	cout << "\tSee you soon" << endl;
@@ -375,10 +554,11 @@ enum class client_option {
 	remove,
 	update,
 	find,
+	transactions,
 	exit
 };
 
-void perform_option(const client_option option) {
+void perform_main_option(const client_option option) {
 	system("clear");
 	switch (option) {
 		case client_option::list:
@@ -401,6 +581,9 @@ void perform_option(const client_option option) {
 			find_client_menu();
 			return_to_menu();
 			break;
+		case client_option::transactions:
+			transaction_menu();
+			break;
 		case client_option::exit:
 			exit_app();
 	}
@@ -417,13 +600,14 @@ void show_main_menu() {
 	cout << "\t[3] Delete Client." << endl;
 	cout << "\t[4] Update Client info." << endl;
 	cout << "\t[5] Find Client." << endl;
-	cout << "\t[6] Exit." << endl;
+	cout << "\t[6] Transactions." << endl;
+	cout << "\t[7] Exit." << endl;
 	cout << "================================" << endl;
 
-	perform_option(
+	perform_main_option(
 		static_cast<client_option>(
 			utils::get_number(
-				"Choose what do you want to do [1 to 6]: "
+				"Choose what do you want to do [1 to 7]: "
 			)
 		)
 	);
