@@ -1,3 +1,4 @@
+// ReSharper disable CppUseStructuredBinding
 #include <algorithm>
 #include <iostream>
 #include <fstream>
@@ -98,7 +99,7 @@ void print_client_record(const Client &client) {
 			<< "| " << setw(12) << left << fixed << setprecision(2) << client.account_balance;
 }
 
-vector<Client> confirm_client_delete(vector<Client> clients) {
+vector<Client> save_clients_data(vector<Client> clients) {
 	fstream file;
 	file.open(FILE_NAME, ios::out);
 
@@ -214,7 +215,7 @@ void add_clients_menu() {
 	prompt_to_add_clients();
 }
 
-void print_client_card(const Client &client) {
+void print_client(const Client &client) {
 	cout << endl << "The Client details:" << endl;
 	cout << "-----------------------------------";
 	cout << endl << "Name         : " << client.name;
@@ -238,9 +239,9 @@ bool find_client(const string &account_number, Client &client) {
 }
 
 bool mark_for_delete_by(const string &account_number, vector<Client> &clients) {
-	for (auto &[name, acc_no, pin_code, phone, account_balance, mark_for_delete]: clients) {
-		if (acc_no == account_number) {
-			mark_for_delete = true;
+	for (Client &c: clients) {
+		if (c.account_number == account_number) {
+			c.mark_for_delete = true;
 			return true;
 		}
 	}
@@ -252,7 +253,7 @@ bool remove_client_by_account_number(const string &account_number) {
 
 
 	if (Client client; find_client(account_number, client)) {
-		print_client_card(client);
+		print_client(client);
 
 		char answer;
 		cout << endl << endl << "Are you sure you want to delete this client? Y/N: ";
@@ -260,7 +261,7 @@ bool remove_client_by_account_number(const string &account_number) {
 
 		if (tolower(answer) == 'y') {
 			mark_for_delete_by(account_number, clients);
-			confirm_client_delete(clients);
+			save_clients_data(clients);
 
 			cout << "\n\nClient Deleted Successfully.";
 			return true;
@@ -271,7 +272,6 @@ bool remove_client_by_account_number(const string &account_number) {
 	}
 	return false;
 }
-
 
 string get_account_number() {
 	string account_number;
@@ -287,6 +287,65 @@ void remove_client_menu() {
 
 	const string account_number = get_account_number();
 	remove_client_by_account_number(account_number);
+}
+
+Client apply_client_changes(const string &account_number) {
+	Client client;
+
+	client.account_number = account_number;
+
+	cout << "Enter name: " << endl;
+	getline(cin >> ws, client.name);
+
+	cout << "Enter pin-code: " << endl;
+	getline(cin, client.pin_code);
+
+	cout << "Enter phone: " << endl;
+	getline(cin, client.phone);
+
+	cout << "Enter account balance: " << endl;
+	cin >> client.account_balance;
+
+	return client;
+}
+
+bool update_client(const string &account_number) {
+	vector<Client> clients = load_clients_data();
+
+	if (Client client; find_client(account_number, client)) {
+		char answer = 'n';
+		print_client(client);
+
+		cout << endl << endl << "Are you sure you want update this client? Y/N: ";
+		cin >> answer;
+
+		if (tolower(answer) == 'y') {
+			for (Client &c: clients) {
+				if (c.account_number == account_number) {
+					c = apply_client_changes(account_number);
+					break;
+				}
+			}
+
+			save_clients_data(clients);
+
+			cout << endl << endl << "Client Updated Successfully.";
+			return true;
+		}
+		cout << endl << "Update client cancelled.";
+	} else {
+		cout << endl << "Client with Account Number [" << account_number << "] is Not Found!";
+	}
+	return false;
+}
+
+void update_client_menu() {
+	cout << "---------------------------------" << endl;
+	cout << "\tUpdate client" << endl;
+	cout << "---------------------------------" << endl;
+
+	const string account_number = get_account_number();
+	update_client(account_number);
 }
 
 enum class client_option {
@@ -314,6 +373,7 @@ void perform_option(const client_option option) {
 			return_to_menu();
 			break;
 		case client_option::update:
+			update_client_menu();
 			return_to_menu();
 			break;
 		case client_option::find:
