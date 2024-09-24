@@ -361,6 +361,14 @@ void find_client_menu() {
 		cout << endl << endl << "Client not found.";
 }
 
+void exit_app() {
+	cout << "---------------------------------" << endl;
+	cout << "\tSee you soon" << endl;
+	cout << "---------------------------------" << endl;
+
+	exit(0);
+}
+
 enum class client_option {
 	list = 1,
 	add,
@@ -394,7 +402,7 @@ void perform_option(const client_option option) {
 			return_to_menu();
 			break;
 		case client_option::exit:
-			show_main_menu();
+			exit_app();
 	}
 }
 
