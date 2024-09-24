@@ -12,6 +12,7 @@ const string FILE_NAME = "client.txt";
 struct Client {
 	string name, account_number, pin_code, phone;
 	double account_balance{};
+	bool mark_for_delete = false;
 };
 
 vector<string> split(const string &str, const string &delimiter) {
@@ -31,9 +32,9 @@ vector<string> split(const string &str, const string &delimiter) {
 	return tokens;
 }
 
-Client decompress_client(const string &line, const string &separator = "#//#") {
+Client decompress_client(const string &data_line, const string &separator = "#//#") {
 	Client client;
-	const vector<string> client_data = split(line, separator);
+	const vector<string> client_data = split(data_line, separator);
 
 	client.name = client_data[0];
 	client.account_number = client_data[1];
@@ -64,10 +65,10 @@ vector<Client> load_clients_data() {
 
 	if (file.is_open()) {
 		Client client;
-		string line;
+		string data_line;
 
-		while (getline(file, line)) {
-			client = decompress_client(line);
+		while (getline(file, data_line)) {
+			client = decompress_client(data_line);
 			clients.push_back(client);
 		}
 
@@ -97,6 +98,24 @@ void print_client_record(const Client &client) {
 			<< "| " << setw(12) << left << fixed << setprecision(2) << client.account_balance;
 }
 
+vector<Client> confirm_client_delete(vector<Client> clients) {
+	fstream file;
+	file.open(FILE_NAME, ios::out);
+
+	if (file.is_open()) {
+		for (Client &c: clients) {
+			if (c.mark_for_delete == false) {
+				string data_line = compress_client(c);
+				file << data_line << endl;
+			}
+		}
+
+		file.close();
+	}
+
+	return clients;
+}
+
 void return_to_menu() {
 	system("read -n 1 -s -p \"Press any key to go back to main menu...\"");
 	show_main_menu();
@@ -108,11 +127,11 @@ bool client_already_exists(const string &account_number) {
 	file.open(FILE_NAME, ios::in);
 
 	if (file.is_open()) {
-		string line;
+		string data_line;
 		Client client;
 
-		while (getline(file, line)) {
-			client = decompress_client(line, "#//#");
+		while (getline(file, data_line)) {
+			client = decompress_client(data_line, "#//#");
 
 			if (client.account_number == account_number) {
 				file.close();
@@ -124,7 +143,7 @@ bool client_already_exists(const string &account_number) {
 	return false;
 }
 
-void show_all_clients() {
+void list_clients() {
 	vector<Client> clients = load_clients_data();
 
 	cout << endl << "\t\t\tClient list: (" << clients.size() << ") Clients.";
@@ -156,8 +175,9 @@ void add_client() {
 	cout << endl << "Enter new client name: ";
 	getline(cin >> ws, client.name);
 
-	while(client_already_exists(client.account_number)) {
-		cout << endl<<"Client with ["<< client.account_number << "] already exists, Enter another Account No" << endl;
+	while (client_already_exists(client.account_number)) {
+		cout << endl << "Client with [" << client.account_number << "] already exists, Enter another Account No" <<
+				endl;
 		getline(cin >> ws, client.account_number);
 	}
 
@@ -186,12 +206,87 @@ void prompt_to_add_clients() {
 	} while (tolower(add_more) == 'y');
 }
 
-void show_add_new_clients() {
+void add_clients_menu() {
 	cout << "---------------------------------" << endl;
 	cout << "\tAdd new client" << endl;
 	cout << "---------------------------------" << endl;
 
 	prompt_to_add_clients();
+}
+
+void print_client_card(const Client &client) {
+	cout << endl << "The Client details:" << endl;
+	cout << "-----------------------------------";
+	cout << endl << "Name         : " << client.name;
+	cout << endl << "Account Number: " << client.account_number;
+	cout << endl << "Pin Code     : " << client.pin_code;
+	cout << endl << "Phone        : " << client.phone;
+	cout << endl << "Account Balance: " << client.account_balance;
+	cout << endl << "-----------------------------------" << endl;
+}
+
+bool find_client(const string &account_number, Client &client) {
+	vector<Client> clients = load_clients_data();
+
+	for (const Client &c: clients) {
+		if (c.account_number == account_number) {
+			client = c;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool mark_for_delete_by(const string &account_number, vector<Client> &clients) {
+	for (auto &[name, acc_no, pin_code, phone, account_balance, mark_for_delete]: clients) {
+		if (acc_no == account_number) {
+			mark_for_delete = true;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool remove_client_by_account_number(const string &account_number) {
+	vector<Client> clients = load_clients_data();
+
+
+	if (Client client; find_client(account_number, client)) {
+		print_client_card(client);
+
+		char answer;
+		cout << endl << endl << "Are you sure you want to delete this client? Y/N: ";
+		cin >> answer;
+
+		if (tolower(answer) == 'y') {
+			mark_for_delete_by(account_number, clients);
+			confirm_client_delete(clients);
+
+			cout << "\n\nClient Deleted Successfully.";
+			return true;
+		}
+		cout << "\nDeletion cancelled";
+	} else {
+		cout << "\nClient with Account Number (" << account_number << ") is not found!";
+	}
+	return false;
+}
+
+
+string get_account_number() {
+	string account_number;
+	cout << "Enter Account Number: " << endl;
+	cin >> account_number;
+	return account_number;
+}
+
+void remove_client_menu() {
+	cout << "---------------------------------" << endl;
+	cout << "\tRemove client" << endl;
+	cout << "---------------------------------" << endl;
+
+	const string account_number = get_account_number();
+	remove_client_by_account_number(account_number);
 }
 
 enum class client_option {
@@ -207,14 +302,15 @@ void perform_option(const client_option option) {
 	system("clear");
 	switch (option) {
 		case client_option::list:
-			show_all_clients();
+			list_clients();
 			return_to_menu();
 			break;
 		case client_option::add:
-			show_add_new_clients();
+			add_clients_menu();
 			return_to_menu();
 			break;
 		case client_option::remove:
+			remove_client_menu();
 			return_to_menu();
 			break;
 		case client_option::update:
