@@ -348,6 +348,19 @@ void update_client_menu() {
 	update_client(account_number);
 }
 
+void find_client_menu() {
+	cout << "---------------------------------" << endl;
+	cout << "\tUpdate client" << endl;
+	cout << "---------------------------------" << endl;
+
+	const string account_number = get_account_number();
+
+	if (Client client; find_client(account_number, client))
+		print_client(client);
+	else
+		cout << endl << endl << "Client not found.";
+}
+
 enum class client_option {
 	list = 1,
 	add,
@@ -377,6 +390,7 @@ void perform_option(const client_option option) {
 			return_to_menu();
 			break;
 		case client_option::find:
+			find_client_menu();
 			return_to_menu();
 			break;
 		case client_option::exit:
