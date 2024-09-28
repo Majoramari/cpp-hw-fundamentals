@@ -1,4 +1,4 @@
-# Verbalize Number Function -  Problem #1
+# Verbalize Number Function - Problem #1
 
 ## Overview
 
@@ -21,7 +21,7 @@ if (number == 0)
 
 ### Step 2: Arrays for Word Lookup
 To verbalize small numbers, we pre-define two arrays:
-1. `under_twenty`: This contains the words for numbers from `1` to `19`. We include an empty string for `0` (since we handle `0` separately).
+1. `under_twenty`: This contains the words for numbers from `1` to `19`.
 2. `tens`: This contains words for multiples of ten starting from `20`.
 
 These arrays allow efficient lookup for numbers below 100.
@@ -65,16 +65,17 @@ else if (number < 1000) {
 
 ### Step 6: Handling Thousands and Above
 The same recursive pattern applies for larger numbers:
-- For thousands: `"One Thousand"`, `"Fifty Thousand"`
-- For millions: `"One Million"`, `"Three Hundred Million"`
-- For billions: `"One Billion"`, `"Five Billion"`
+- For thousands: `"One Thousand"` vs. `"Two Thousands"`
+- For millions: `"One Million"` vs. `"Two Millions"`
+- For billions: `"One Billion"` vs. `"Two Billions"`
 
 The pattern for each of these ranges involves:
 1. Dividing the number by a large power of 10 (like 1000 for thousands, 1,000,000 for millions).
 2. Recursively calling `verbalize_number` to handle the remainder:
 ```cpp
 else if (number < 1000000) {
-    result = verbalize_number(number / 1000) + " Thousand";
+    const string thousands = verbalize_number(number / 1000);
+    result = thousands + (number / 1000 == 1 ? " Thousand" : " Thousands");
     if (number % 1000 != 0)
         result += " " + verbalize_number(number % 1000);
 }
@@ -83,5 +84,23 @@ else if (number < 1000000) {
 ### Step 7: Final Concatenation
 For all recursive calls, we concatenate the parts properly using a space between the segments. This ensures that the result reads naturally like `"One Hundred Twenty Three"` instead of `"OneHundredTwentyThree"`.
 
-## Main Function Usage
-The `main` function demonstrates usage by getting a number using a `utils::get_number` function and printing the result of `verbalize_number`.
+## Example Usages
+Here are a few example outputs based on different inputs to the `verbalize_number` function:
+
+- Input: `0`
+    - Output: `"Zero"`
+
+- Input: `15`
+    - Output: `"Fifteen"`
+
+- Input: `342`
+    - Output: `"Three Hundred Forty Two"`
+
+- Input: `1050000`
+    - Output: `"One Million Fifty Thousand"`
+
+- Input: `1001`
+    - Output: `"One Thousand One"`
+
+- Input: `2000000`
+    - Output: `"Two Millions"`
