@@ -64,10 +64,18 @@ void print_month_calendar(const unsigned short &month, const unsigned short &yea
 	cout << endl << " =================================== " << endl;
 }
 
+void print_year_calendar(const unsigned short &year) {
+	cout << " =================================== " << endl;
+	cout << "\t\t\tCalendar - " << year << endl;
+	cout <<  " =================================== " << endl;
+
+	for (int i = 1; i <= 12; i++)
+		print_month_calendar(i, year);
+}
+
 int main() {
 	const unsigned short year = utils::get_number("Please enter a year: ");
-	const unsigned short month = read_month_number();
 
-	print_month_calendar(month, year);
+	print_year_calendar(year);
 	return 0;
 }

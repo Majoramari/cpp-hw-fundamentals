@@ -1,4 +1,4 @@
-# Month Calendar - Problem #8
+# Year Calendar - Problem #9
 
 > ### ☑️ Tasks
 > - [x] Solved. - Sun, 29 Sep 2024
@@ -6,15 +6,14 @@
 
 ## Required Task
 
-The program generates a calendar for a specific month of a given year. It correctly accounts for leap years and displays the calendar in a user-friendly format.
+The program generates a calendar for a specific year, displaying each month in a user-friendly format. It correctly accounts for leap years and presents the entire year at a glance.
 
 ### Inputs
 - **Year**: A valid year (e.g., 2024) of type `unsigned short`.
-- **Month**: A valid month number (1-12) of type `unsigned short`.
 
 ### Outputs
-- **Month**: The name of the specified month.
-- **Days**: The calendar representation of the month, formatted into weeks starting from Sunday.
+- **Year**: The specified year displayed at the top of the calendar.
+- **Months**: The complete calendar for each month of the specified year, formatted into weeks starting from Sunday.
 
 ## Functions and Their Responsibilities
 
@@ -153,42 +152,76 @@ void print_month_calendar(const unsigned short &month, const unsigned short &yea
 
 ---
 
+### print_year_calendar
+```cpp
+void print_year_calendar(const unsigned short &year) {
+    cout << " =================================== " << endl;
+    cout << "\t\t\tCalendar - " << year << endl;
+    cout <<  " =================================== " << endl;
+
+    for (int i = 1; i <= 12; i++)
+        print_month_calendar(i, year);
+}
+```
+**Purpose**: This function prints the complete calendar for the specified year by calling the `print_month_calendar` function for each month.
+
+**Input**:
+- `year`: The year as an unsigned short integer.
+
+**Output**:
+- Prints the complete year calendar to the console.
+
+---
+
 ### main
 ```cpp
 int main() {
     const unsigned short year = utils::get_number("Please enter a year: ");
-    const unsigned short month = read_month_number();
 
-    print_month_calendar(month, year);
+    print_year_calendar(year);
     return 0;
 }
 ```
-**Purpose**: This is the main function of the program, coordinating all user inputs and calculations. It prompts for the year, reads the month, and finally prints the calendar.
+**Purpose**: This is the main function of the program, coordinating all user inputs and calculations. It prompts for the year and finally prints the calendar for the entire year.
 
 **Input**:
-- User input for the year and month.
+- User input for the year.
 
 **Output**:
-- Outputs the calendar for the specified month and year.
+- Outputs the calendar for the specified year.
 
 ---
 
 ## Example Usage
 
 1. **User Input**:
-   ```
-   Please enter a year: 2024
-   Please enter a month number: 10
-   ```
+```
+Please enter a year: 2024
+```
 
 2. **Program Output**:
 ```
- ===============[Oct]=============== 
-  Sun  Mon  Tue  Wed  Thu  Fri  Sat
-              1    2    3    4    5
-    6    7    8    9   10   11   12
-   13   14   15   16   17   18   19
-   20   21   22   23   24   25   26
-   27   28   29   30   31
  =================================== 
+	   Calendar - 2024
+ =================================== 
+
+ ===============[Jan]=============== 
+  Sun  Mon  Tue  Wed  Thu  Fri  Sat
+                   1    2    3    4
+    5    6    7    8    9   10   11
+   12   13   14   15   16   17   18
+   19   20   21   22   23   24   25
+   26   27   28   29   30   31
+ =================================== 
+
+ ===============[Feb]=============== 
+  Sun  Mon  Tue  Wed  Thu  Fri  Sat
+                                   1
+    2    3    4    5    6    7    8
+    9   10   11   12   13   14   15
+   16   17   18   19   20   21   22
+   23   24   25   26   27   28   29
+ =================================== 
+
+ (continued for all months...)
 ```
