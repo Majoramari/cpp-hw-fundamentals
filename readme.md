@@ -1,59 +1,135 @@
-# Leap Year Checker Function - Problem #2 & #3
+# Leap Year Calculator - Problem #3 : #6
+
+> ### ☑️ Tasks
+> - [x] Solved. - Sat, 28 Sep 2024
+> - [x] Explanation. - Sat, 28 Sep 2024
 
 ## Overview
 
-The `is_leap_year` function determines whether a given year is a leap year or not based on specific criteria.
+The provided code defines a set of functions to calculate the duration of a year and the duration of a specific month within that year.
 
 ### Purpose
-The primary goal of the `is_leap_year` function is to evaluate any integer year and return a boolean indicating whether it is a leap year. For example:
-- `2020` is a leap year.
-- `1900` is not a leap year.
-- `2000` is a leap year.
+The program aims to:
+- Determine whether a year is a leap year.
+- Calculate and display the number of days, hours, minutes, and seconds in a given month of a specified year.
 
-### Leap Year Criteria
-A year is considered a leap year if it satisfies the following conditions:
+## Functions and Their Responsibilities
 
-1. **Divisibility by 4**: The year must be divisible by `4`. This means when you divide the year by `4`, there should be no remainder. For example:
-    - `2020 ÷ 4 = 505` (no remainder, so `2020` is a candidate for a leap year)
-    - `2019 ÷ 4 = 504.75` (has a remainder, so `2019` is **not** a candidate)
-
-2. **Exclusion by 100**: If a year is divisible by `100`, it is **not** considered a leap year unless it also satisfies the next condition. For example:
-    - `1900 ÷ 100 = 19` (no remainder, so `1900` is **not** a leap year)
-    - `2100 ÷ 100 = 21` (also not a leap year)
-
-3. **Inclusion by 400**: If a year is divisible by `400`, it is considered a leap year, even if it is also divisible by `100`. For example:
-    - `2000 ÷ 400 = 5` (no remainder, so `2000` is a leap year)
-    - `2400 ÷ 400 = 6` (also a leap year)
-
-### Thought Process and Structure
-
-### Step 1: Implementing the Leap Year Logic
-The logic for determining a leap year is concise and can be expressed using a single boolean expression:
+### 1. `is_leap_year`
 ```cpp
-return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
+bool is_leap_year(const unsigned short int &year) {
+	return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
+}
 ```
-This expression checks:
-- If the year is divisible by `4` and **not** by `100`, or
-- If the year is divisible by `400`.
+**Purpose**: This function checks if a given year is a leap year based on established criteria:
+- A year is a leap year if:
+   - It is divisible by `4` AND
+   - It is NOT divisible by `100` UNLESS it is also divisible by `400`.
 
-### Step 2: Main Function Usage
-In the `main` function, we first prompt the user to enter a year. This is achieved using `utils::get_number`, which presumably handles user input.
-
-### Step 3: Displaying the Result
-After obtaining the year, we call `is_leap_year(year)` to evaluate whether it is a leap year. We then display a message based on the result:
+### 2. `read_month_number`
 ```cpp
-cout << year << (is_leap_year(year) ? " is a Leap Year" : " is not a Leap Year");
+unsigned short int read_month_number() {
+	unsigned short int month;
+	do {
+		cout << "Please enter a month number: ";
+		cin >> month;
+	} while (month < 1 || month > 12);
+	return month;
+}
 ```
-This line utilizes the ternary operator to choose between two string outputs, making the code concise and readable.
+**Purpose**: This function prompts the user to enter a month number and ensures it is valid (between `1` and `12`). It uses a loop to repeatedly ask for input until a valid month is provided.
+
+### 3. `get_month_days`
+```cpp
+int get_month_days(const unsigned short int &year, const unsigned short int &month) {
+	static const int days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+	return month == 2 && is_leap_year(year) ? 29 : days_in_month[month - 1];
+}
+```
+**Purpose**: This function calculates the number of days in a specific month of a given year. It uses a static array for the days in each month, adjusting February to account for leap years:
+- If the month is February (month `2`), it checks if the year is a leap year. If so, it returns `29`, otherwise, it returns `28`.
+- For all other months, it returns the value from the `days_in_month` array.
+
+### 4. `get_days_in_year`
+```cpp
+int get_days_in_year(const unsigned short int &year) {
+	return is_leap_year(year) ? 366 : 365;
+}
+```
+**Purpose**: This function returns the total number of days in the specified year, using the `is_leap_year` function to determine if it should return `366` or `365`.
+
+### 5. `get_hours_in_year`
+```cpp
+int get_hours_in_year(const unsigned short int &year) {
+	return get_days_in_year(year) * 24;
+}
+```
+**Purpose**: This function calculates the total number of hours in a year by multiplying the number of days by `24`.
+
+### 6. `get_minutes_in_year`
+```cpp
+int get_minutes_in_year(const unsigned short int &year) {
+	return get_hours_in_year(year) * 60;
+}
+```
+**Purpose**: This function calculates the total number of minutes in a year by multiplying the total hours by `60`.
+
+### 7. `get_seconds_in_year`
+```cpp
+int get_seconds_in_year(const unsigned short int &year) {
+	return get_minutes_in_year(year) * 60;
+}
+```
+**Purpose**: This function calculates the total number of seconds in a year by multiplying the total minutes by `60`.
+
+### 8. `print_year_duration` (Unused)
+```cpp
+void print_year_duration(const unsigned short int &year) {
+	cout << "Number of Days: " << get_days_in_year(year) << endl;
+	cout << "Number of Hours: " << get_hours_in_year(year) << endl;
+	cout << "Number of Minutes: " << get_minutes_in_year(year) << endl;
+	cout << "Number of Seconds: " << get_seconds_in_year(year) << endl;
+}
+```
+**Purpose**: Although defined, this function is not called in the main program. It would print the total duration of the specified year in days, hours, minutes, and seconds.
+
+### 9. `print_month_duration`
+```cpp
+void print_month_duration(const unsigned short int &year, const unsigned short int &month) {
+	cout << "Number of Days: " << get_month_days(year, month) << endl;
+	cout << "Number of Hours: " << get_month_days(year, month) * 24 << endl;
+	cout << "Number of Minutes: " << get_month_days(year, month) * 24 * 60 << endl;
+	cout << "Number of Seconds: " << get_month_days(year, month) * 24 * 60 * 60 << endl;
+}
+```
+**Purpose**: This function calculates and displays the number of days, hours, minutes, and seconds for the specified month of a given year.
+
+### Main Function
+```cpp
+int main() {
+	const unsigned short int year = utils::get_number("Please enter a year to check: ");
+	const unsigned short int month = read_month_number();
+
+	print_month_duration(year, month);
+
+	return 0;
+}
+```
+**Purpose**: The `main` function coordinates the user interaction:
+1. It prompts the user to enter a year using `utils::get_number`.
+2. It reads a valid month number using `read_month_number`.
+3. It calls `print_month_duration` to display the duration of the specified month in the given year.
 
 ## Example Execution
 When the program runs:
-1. It prompts the user with `"Please enter a year: "`.
-2. If the user enters `2020`, the output will be:
+1. It prompts the user with `"Please enter a year to check: "`.
+2. The user inputs `2024`, followed by entering `2` for February.
+3. The output will be:
    ```
-   2020 is a Leap Year
+   Number of Days: 29
+   Number of Hours: 696
+   Number of Minutes: 41760
+   Number of Seconds: 2505600
    ```
-3. If the user enters `1900`, the output will be:
-   ```
-   1900 is not a Leap Year
-   ```
+   This shows the duration for February in a leap year.
