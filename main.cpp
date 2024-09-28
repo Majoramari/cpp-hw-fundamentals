@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include "utils.h"
 
 using namespace std;
@@ -44,7 +43,8 @@ string verbalize_number(const int &number) {
 	// Handle numbers below thousands
 	// Example: 3750 -> Three Thousand Seven Hundred Fifty
 	else if (number < 1000000) {
-		result = verbalize_number(number / 1000) + " Thousand";
+		const string thousands = verbalize_number(number / 1000);
+		result = thousands + (number / 1000 == 1 ? " Thousand" : " Thousands");
 		if (number % 1000 != 0)
 			result += " " + verbalize_number(number % 1000);
 	}
@@ -52,7 +52,8 @@ string verbalize_number(const int &number) {
 	// Handle numbers below millions
 	// Example: 3750000 -> Three Million Seven Hundred Fifty Thousand
 	else if (number < 1000000000) {
-		result = verbalize_number(number / 1000000) + " Million";
+		const string millions = verbalize_number(number / 1000000);
+		result = millions + (number / 1000000 == 1 ? " Million" : " Millions");
 		if (number % 1000000 != 0)
 			result += " " + verbalize_number(number % 1000000);
 	}
@@ -60,7 +61,8 @@ string verbalize_number(const int &number) {
 	// Handle billions
 	// Example: 3750000000 -> Three Billion Seven Hundred Fifty Million
 	else {
-		result = verbalize_number(number / 1000000000) + " Billion";
+		const string billions = verbalize_number(number / 1000000000);
+		result = billions + (number / 1000000000 == 1 ? " Billion" : " Billions");
 		if (number % 1000000000 != 0)
 			result += " " + verbalize_number(number % 1000000000);
 	}
@@ -68,11 +70,8 @@ string verbalize_number(const int &number) {
 	return result;
 }
 
-
 int main() {
 	const int number = utils::get_number();
-
 	cout << verbalize_number(number);
-
 	return 0;
 }
