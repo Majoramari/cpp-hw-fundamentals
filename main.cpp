@@ -5,6 +5,10 @@
 
 using namespace std;
 
+struct Date {
+	unsigned short year, month, day;
+};
+
 bool is_leap_year(const unsigned short &year) {
 	return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
 }
@@ -50,14 +54,44 @@ unsigned short get_days_passed(const unsigned short &day, const unsigned short &
 	return days_passed;
 }
 
+Date get_date_by_days_passed(unsigned short days_passed, const unsigned short &year) {
+	Date date = {year, 1, 1};
+
+	while (days_passed > 0) {
+		// ReSharper disable once CppTooWideScopeInitStatement
+		const unsigned short days_in_month = get_month_days(date.month, date.year);
+
+		if (days_passed > days_in_month) {
+			days_passed -= days_in_month;
+			++date.month;
+		} else {
+			date.day = days_passed;
+			break;
+		}
+	}
+
+	return date;
+}
+
 int main() {
 	const unsigned short year = utils::get_number("Please enter a year: ");
 	const unsigned short month = read_month_number();
 	const unsigned short day = read_day_number();
 
-	cout << "Number of days passed since "
-			<< month << "/" << day << "/" << year << ": "
-			<< get_days_passed(day, month, year);
+	const unsigned short days_passed = get_days_passed(day, month, year);
+
+	cout << endl << "Number of days passed since "
+			<< day << "/" << month << "/" << year << ": "
+			<< days_passed;
+
+	// ReSharper disable once CppUseStructuredBinding
+	const Date date = get_date_by_days_passed(days_passed, year);
+
+	cout << endl << endl << "Date for [" << days_passed << "]: "
+			<< date.day << "/"
+			<< date.month << "/"
+			<< date.year
+			<< endl;
 
 	return 0;
 }
