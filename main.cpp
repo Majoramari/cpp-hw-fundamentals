@@ -32,6 +32,28 @@ unsigned short read_day_number() {
 	return day;
 }
 
+bool is_leap_year(unsigned short year) {
+	return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+unsigned short get_month_days(unsigned short month, unsigned short year) {
+	unsigned short days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+	if (is_leap_year(year) && month == 2)
+		return 29;
+
+	return days_in_month[month - 1];
+}
+
+string get_month_name(const unsigned short month) {
+	string months[] = {
+		"",
+		"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November",
+		"December"
+	};
+	return months[month];
+}
+
 Date read_date() {
 	const unsigned short day = read_day_number();
 	const unsigned short month = read_month_number();
@@ -43,16 +65,28 @@ bool is_equal(const Date &date1, const Date &date2) {
 	return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
 }
 
+bool is_last_day(const Date &date) {
+	return date.day == get_month_days(date.month, date.year);
+}
+
+bool is_last_month(const Date &date) {
+	return date.month == 12;
+}
+
 int main() {
-	const Date date1 = read_date();
+	const Date date = read_date();
 
 	cout << endl;
 
-	const Date date2 = read_date();
+	if (is_last_day(date))
+		cout << "Yes, " << date.day << " is last day in " << get_month_name(date.month) << endl;
+	else
+		cout << "No, " << date.day << " is not last day in " << get_month_name(date.month) << endl;
 
-	cout << endl << date1.year << "/" << date1.month << "/" << date1.day
-			<< " is " << (is_equal(date1, date2) ? "equal" : "NOT equal") << " "
-			<< date2.year << "/" << date2.month << "/" << date2.day << endl;
+	if (is_last_month(date))
+		cout << "Yes, " << date.month << " is last month in year " << date.year << endl;
+	else
+		cout << "No, " << date.month << " is not last month in year " << date.year << endl;
 
 	return 0;
 }
