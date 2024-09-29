@@ -32,12 +32,12 @@ unsigned short read_day_number() {
 	return day;
 }
 
-bool is_leap_year(unsigned short year) {
+bool is_leap_year(const unsigned short year) {
 	return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
 
-unsigned short get_month_days(unsigned short month, unsigned short year) {
-	unsigned short days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+unsigned short get_month_days(const unsigned short month, const unsigned short year) {
+	const unsigned short days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 	if (is_leap_year(year) && month == 2)
 		return 29;
