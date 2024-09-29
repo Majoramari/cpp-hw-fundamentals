@@ -1,4 +1,4 @@
-# Date Addition - Problem #12
+# Date Equality Check - Problem #14
 
 > ### ☑️ Tasks
 > - [x] Solved. - Sun, 29 Sep 2024
@@ -6,8 +6,7 @@
 
 ## Required Task
 
-The program asks the user for a date and a number of days to add. It calculates the new date by adding the specified
-number of days to the input date, correctly handling month and year transitions, as well as leap years.
+The program asks the user to input two dates and compares them to check if they are equal. It verifies whether both the day, month, and year of the two dates match.
 
 ---
 
@@ -21,19 +20,7 @@ struct Date {
 };
 ```
 
-This structure holds the date components: year, month, and day.
-
----
-
-### `is_leap_year`
-
-```cpp
-bool is_leap_year(const unsigned short &year) {
-	return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
-}
-```
-
-This function checks if a year is a leap year. It is used to determine if February should have 29 days.
+This structure holds the date components: `year`, `month`, and `day`.
 
 ---
 
@@ -44,7 +31,7 @@ unsigned short read_month_number() {
 	unsigned short month = 1;
 	do {
 		if (month < 1 || month > 12)
-			cout << endl << "Invalid month number, try again: " << endl;;
+			cout << endl << "Invalid month number, try again: " << endl;
 
 		cout << "Please enter a month number: ";
 		cin >> month;
@@ -52,6 +39,7 @@ unsigned short read_month_number() {
 	return month;
 }
 ```
+
 ```cpp
 unsigned short read_day_number() {
 	unsigned short day = 1;
@@ -66,7 +54,7 @@ unsigned short read_day_number() {
 }
 ```
 
-These functions are used to read valid day and month numbers from the user, ensuring they are within valid ranges.
+These functions prompt the user for a valid day (1–31) and month (1–12). The values are validated to ensure they are within valid ranges.
 
 ---
 
@@ -81,82 +69,19 @@ Date read_date() {
 }
 ```
 
-This function reads a valid date from the user by prompting for the day, month, and year. The date is returned as a
-`Date` struct.
+This function reads a valid date by calling `read_day_number`, `read_month_number`, and asking for the year. It returns a `Date` struct containing the user's input.
 
 ---
 
-### `get_month_days`
+### `is_equal`
 
 ```cpp
-unsigned short get_month_days(const unsigned short &month, const unsigned short &year) {
-	static const int days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-	return month == 2 && is_leap_year(year) ? 29 : days_in_month[month - 1];
+bool is_equal(const Date &date1, const Date &date2) {
+	return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
 }
 ```
 
-This function returns the number of days in a specific month. It takes into account leap years, ensuring February has 29
-days if the year is a leap year.
-
----
-
-### `get_days_passed`
-
-```cpp
-unsigned short get_days_passed(const Date date) {
-	unsigned short days_passed = 0;
-	for (int i = 1; i <= date.month; i++) {
-		if (date.month != i)
-			days_passed += get_month_days(i, date.year);
-		else
-			days_passed += date.day;
-	}
-	return days_passed;
-}
-```
-
-This function calculates the number of days passed from the start of the year to the specified date. It adds up the days
-from previous months and the days from the current month.
-
----
-
-### `add_days`
-
-```cpp
-Date add_days(const unsigned short days_to_add, Date date) {
-	unsigned short remaining_days = days_to_add + get_days_passed(date);
-	date.month = 1;
-
-	while (remaining_days > 0) {
-		const unsigned short month_days = get_month_days(date.month, date.year);
-
-		if (remaining_days > month_days) {
-			remaining_days -= month_days;
-			date.month++;
-
-			if (date.month > 12) {
-				date.month = 1;
-				date.year++;
-			}
-		} else {
-			date.day = remaining_days;
-			break;
-		}
-	}
-
-	return date;
-}
-```
-
-This function takes a number of days to add and the current date, and calculates the resulting date after the addition.
-It handles:
-
-- Month and year transitions (i.e., when adding days causes the date to cross into the next month or year).
-- Leap years, ensuring February has 29 days when necessary.
-
-It works by first calculating the total days passed since the start of the year, then iterating through each month,
-subtracting the days from each month until the remaining days fit within a month, and finally setting the day and
-adjusting the month and year as needed.
+This function checks if two dates are equal by comparing their `year`, `month`, and `day` fields. It returns `true` if both dates are the same, and `false` otherwise.
 
 ---
 
@@ -164,21 +89,24 @@ adjusting the month and year as needed.
 
 ```cpp
 int main() {
-	Date date = read_date(); // Read the initial date
-	const unsigned short days_to_add = utils::get_number("How many days you want to add: "); // Read days to add
+	const Date date1 = read_date(); // Read the first date
 
-	date = add_days(days_to_add, date); // Add the days to the date
-	cout << "Days after adding [" << days_to_add << "] days: "
-			<< date.day << "/"
-			<< date.month << "/"
-			<< date.year << endl; // Output the new date
+	cout << endl;
+
+	const Date date2 = read_date(); // Read the second date
+
+	cout << endl << date1.year << "/" << date1.month << "/" << date1.day
+			<< " is " << (is_equal(date1, date2) ? "equal" : "NOT equal") << " "
+			<< date2.year << "/" << date2.month << "/" << date2.day << endl;
 
 	return 0;
 }
 ```
 
-The `main` function reads the initial date and the number of days the user wants to add. It calls `add_days` to
-calculate the resulting date and prints the new date.
+In the `main` function:
+1. The program reads two dates using `read_date`.
+2. It calls `is_equal` to compare the two dates.
+3. The result is displayed to the user, indicating whether the two dates are equal or not.
 
 ---
 
@@ -186,13 +114,23 @@ calculate the resulting date and prints the new date.
 
 1. **User Input**:
    ```
-   Please enter a year: 2024
-   Please enter a month number: 9
-   Please enter a day number: 29
-   How many days you want to add: 60
+   Please enter a day number: 15
+   Please enter a month number: 8
+   Please enter a year: 2023
+
+   Please enter a day number: 15
+   Please enter a month number: 8
+   Please enter a year: 2023
    ```
 
 2. **Program Output**:
    ```
-   Days after adding [60] days: 28/11/2024
+   2023/8/15 is equal 2023/8/15
    ```
+
+---
+
+## Notes
+
+- The program does not account for invalid date ranges (e.g., February 30).
+- Only basic validation (days between 1-31 and months between 1-12) is performed.
