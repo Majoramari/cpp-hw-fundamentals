@@ -45,15 +45,6 @@ unsigned short get_month_days(const unsigned short month, const unsigned short y
 	return days_in_month[month - 1];
 }
 
-string get_month_name(const unsigned short month) {
-	string months[] = {
-		"",
-		"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November",
-		"December"
-	};
-	return months[month];
-}
-
 Date read_date() {
 	const unsigned short day = read_day_number();
 	const unsigned short month = read_month_number();
@@ -69,20 +60,30 @@ bool is_last_month(const Date &date) {
 	return date.month == 12;
 }
 
+Date increase_date_by_one_day(Date date) {
+	if (is_last_day(date) && is_last_month(date))
+		++date.year;
+
+	if (is_last_day(date))
+		date.day = 1;
+	else
+		++date.day;
+
+	if (is_last_month(date))
+		date.month = 1;
+	else
+		++date.month;
+
+	return date;
+}
+
 int main() {
 	const Date date = read_date();
 
 	cout << endl;
 
-	if (is_last_day(date))
-		cout << "Yes, " << date.day << " is last day in " << get_month_name(date.month) << endl;
-	else
-		cout << "No, " << date.day << " is not last day in " << get_month_name(date.month) << endl;
-
-	if (is_last_month(date))
-		cout << "Yes, " << date.month << " is last month in year " << date.year << endl;
-	else
-		cout << "No, " << date.month << " is not last month in year " << date.year << endl;
+	const auto [year, month, day] = increase_date_by_one_day(date);
+	cout << "Date after one day: " << day << "/" << month << "/" << year << endl;
 
 	return 0;
 }

@@ -1,4 +1,4 @@
-# Date End Check - Problem #15
+# Date Increment - Problem #15
 
 > ### ☑️ Tasks
 > - [x] Solved. - Sun, 29 Sep 2024
@@ -6,7 +6,7 @@
 
 ## Required Task
 
-The program asks the user for a date and determines whether the given date is the last day of the month and whether it is the last month of the year. It provides a simple verification by checking the day and month against the corresponding values.
+The program prompts the user to input a date and calculates the date after incrementing it by one day. It handles month transitions, year transitions, and leap years accurately.
 
 ---
 
@@ -20,18 +20,47 @@ struct Date {
 };
 ```
 
-This structure represents a date with three components: `year`, `month`, and `day`.
+This structure holds the components of a date: year, month, and day.
 
 ---
 
-### `read_month_number`
+### `is_leap_year`
+
+```cpp
+bool is_leap_year(const unsigned short year) {
+	return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+```
+
+This function checks if a given year is a leap year. It returns `true` if the year is a leap year and `false` otherwise.
+
+---
+
+### `get_month_days`
+
+```cpp
+unsigned short get_month_days(const unsigned short month, const unsigned short year) {
+	const unsigned short days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+	if (is_leap_year(year) && month == 2)
+		return 29;
+
+	return days_in_month[month - 1];
+}
+```
+
+This function returns the number of days in a specified month of a year. It correctly handles leap years, returning 29 days for February if the year is a leap year.
+
+---
+
+### `read_day_number` and `read_month_number`
 
 ```cpp
 unsigned short read_month_number() {
 	unsigned short month = 1;
 	do {
 		if (month < 1 || month > 12)
-			cout << endl << "Invalid month number, try again: " << endl;
+			cout << endl << "Invalid month number, try again: " << endl;;
 
 		cout << "Please enter a month number: ";
 		cin >> month;
@@ -39,13 +68,6 @@ unsigned short read_month_number() {
 	return month;
 }
 ```
-
-This function prompts the user to enter a valid month (1–12). It ensures that the input is within the valid range and returns the month number.
-
----
-
-### `read_day_number`
-
 ```cpp
 unsigned short read_day_number() {
 	unsigned short day = 1;
@@ -60,53 +82,7 @@ unsigned short read_day_number() {
 }
 ```
 
-This function prompts the user to enter a valid day (1–31). It ensures that the input is within the valid range and returns the day number.
-
----
-
-### `is_leap_year`
-
-```cpp
-bool is_leap_year(unsigned short year) {
-	return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
-}
-```
-
-This function checks if a year is a leap year, which is important for determining the number of days in February.
-
----
-
-### `get_month_days`
-
-```cpp
-unsigned short get_month_days(unsigned short month, unsigned short year) {
-	unsigned short days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
-	if (is_leap_year(year) && month == 2)
-		return 29;
-
-	return days_in_month[month - 1];
-}
-```
-
-This function returns the number of days in a given month, accounting for leap years if the month is February.
-
----
-
-### `get_month_name`
-
-```cpp
-string get_month_name(const unsigned short month) {
-	string months[] = {
-		"",
-		"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November",
-		"December"
-	};
-	return months[month];
-}
-```
-
-This function returns the name of the month based on its number (1–12), using an array of month names.
+These functions prompt the user to input valid day and month numbers, ensuring they are within acceptable ranges.
 
 ---
 
@@ -121,19 +97,7 @@ Date read_date() {
 }
 ```
 
-This function reads a valid date from the user, returning it as a `Date` struct.
-
----
-
-### `is_equal`
-
-```cpp
-bool is_equal(const Date &date1, const Date &date2) {
-	return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
-}
-```
-
-This function checks whether two dates are equal by comparing their `year`, `month`, and `day` fields.
+This function reads a complete date from the user, retrieving the day, month, and year through the respective input functions, and returns the constructed `Date` struct.
 
 ---
 
@@ -145,7 +109,7 @@ bool is_last_day(const Date &date) {
 }
 ```
 
-This function determines whether the specified date is the last day of the month by comparing the day against the total number of days in that month.
+This function checks if the given date is the last day of the month by comparing the day with the total days in that month.
 
 ---
 
@@ -157,7 +121,35 @@ bool is_last_month(const Date &date) {
 }
 ```
 
-This function checks if the month of the specified date is December, indicating it is the last month of the year.
+This function checks if the given date falls in December, which is the last month of the year.
+
+---
+
+### `increase_date_by_one_day`
+
+```cpp
+Date increase_date_by_one_day(Date date) {
+	if (is_last_day(date) && is_last_month(date))
+		++date.year;
+
+	if (is_last_day(date))
+		date.day = 1;
+	else
+		++date.day;
+
+	if (is_last_month(date))
+		date.month = 1;
+	else
+		++date.month;
+
+	return date;
+}
+```
+
+This function takes a `Date` object and increments it by one day. It checks if the current date is the last day of the month and updates the month and year accordingly:
+- If the date is the last day of December, it increments the year.
+- If the date is the last day of any month, it resets the day to 1 and increments the month.
+- If it's not the last day, it simply increments the day.
 
 ---
 
@@ -165,28 +157,18 @@ This function checks if the month of the specified date is December, indicating 
 
 ```cpp
 int main() {
-	const Date date = read_date(); // Read the date
+	const Date date = read_date();
 
 	cout << endl;
 
-	if (is_last_day(date))
-		cout << "Yes, " << date.day << " is last day in " << get_month_name(date.month) << endl;
-	else
-		cout << "No, " << date.day << " is not last day in " << get_month_name(date.month) << endl;
-
-	if (is_last_month(date))
-		cout << "Yes, " << date.month << " is last month in year " << date.year << endl;
-	else
-		cout << "No, " << date.month << " is not last month in year " << date.year << endl;
+	const auto [year, month, day] = increase_date_by_one_day(date);
+	cout << "Date after one day: " << day << "/" << month << "/" << year << endl;
 
 	return 0;
 }
 ```
 
-In the `main` function:
-1. The program reads a date using `read_date`.
-2. It checks if that date is the last day of the month and whether it is the last month of the year.
-3. Results are printed to the user.
+In the `main` function, the user is prompted to enter a date. The program then calls the `increase_date_by_one_day` function to compute the date one day later and outputs the result in the format `day/month/year`.
 
 ---
 
@@ -194,20 +176,12 @@ In the `main` function:
 
 1. **User Input**:
    ```
-   Please enter a day number: 30
-   Please enter a month number: 9
    Please enter a year: 2024
+   Please enter a month number: 12
+   Please enter a day number: 31
    ```
 
 2. **Program Output**:
    ```
-   Yes, 30 is last day in September
-   No, 9 is not last month in year 2024
+   Date after one day: 1/1/2025
    ```
-
----
-
-## Notes
-
-- The program does not check for invalid date ranges (e.g., February 30).
-- Only basic validation (days between 1-31 and months between 1-12) is performed.
