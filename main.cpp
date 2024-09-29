@@ -61,10 +61,6 @@ Date read_date() {
 	return {year, month, day};
 }
 
-bool is_equal(const Date &date1, const Date &date2) {
-	return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
-}
-
 bool is_last_day(const Date &date) {
 	return date.day == get_month_days(date.month, date.year);
 }
