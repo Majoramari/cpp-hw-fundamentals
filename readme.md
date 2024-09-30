@@ -1,12 +1,12 @@
-# Date Increment - Problem #15
+# Date Difference Calculator - Problem #17
 
 > ### ☑️ Tasks
-> - [x] Solved. - Sun, 29 Sep 2024
-> - [x] Code Explanation. - Sun, 29 Sep 2024
+> - [x] Solved. - Mon, 30 Sep 2024
+> - [x] Code Explanation. - Mon, 30 Sep 2024
 
 ## Required Task
 
-The program prompts the user to input a date and calculates the date after incrementing it by one day. It handles month transitions, year transitions, and leap years accurately.
+The program prompts the user to input two dates and calculates the difference in days between them. It handles month transitions, year transitions, and leap years accurately.
 
 ---
 
@@ -16,7 +16,7 @@ The program prompts the user to input a date and calculates the date after incre
 
 ```cpp
 struct Date {
-	unsigned short year, month, day;
+    unsigned short year, month, day;
 };
 ```
 
@@ -24,11 +24,51 @@ This structure holds the components of a date: year, month, and day.
 
 ---
 
+### `read_month_number`
+
+```cpp
+unsigned short read_month_number() {
+    unsigned short month = 1;
+    do {
+        if (month < 1 || month > 12)
+            cout << endl << "Invalid month number, try again: " << endl;
+
+        cout << "Please enter a month number: ";
+        cin >> month;
+    } while (month < 1 || month > 12);
+    return month;
+}
+```
+
+This function prompts the user to input a valid month number (1-12) and returns it.
+
+---
+
+### `read_day_number`
+
+```cpp
+unsigned short read_day_number() {
+    unsigned short day = 1;
+    do {
+        if (day < 1 || day > 31)
+            cout << endl << "Invalid day number, try again: ";
+
+        cout << "Please enter a day number: ";
+        cin >> day;
+    } while (day < 1 || day > 31);
+    return day;
+}
+```
+
+This function prompts the user to input a valid day number (1-31) and returns it.
+
+---
+
 ### `is_leap_year`
 
 ```cpp
 bool is_leap_year(const unsigned short year) {
-	return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
 ```
 
@@ -40,12 +80,12 @@ This function checks if a given year is a leap year. It returns `true` if the ye
 
 ```cpp
 unsigned short get_month_days(const unsigned short month, const unsigned short year) {
-	const unsigned short days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    const unsigned short days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-	if (is_leap_year(year) && month == 2)
-		return 29;
+    if (is_leap_year(year) && month == 2)
+        return 29;
 
-	return days_in_month[month - 1];
+    return days_in_month[month - 1];
 }
 ```
 
@@ -53,47 +93,14 @@ This function returns the number of days in a specified month of a year. It corr
 
 ---
 
-### `read_day_number` and `read_month_number`
-
-```cpp
-unsigned short read_month_number() {
-	unsigned short month = 1;
-	do {
-		if (month < 1 || month > 12)
-			cout << endl << "Invalid month number, try again: " << endl;;
-
-		cout << "Please enter a month number: ";
-		cin >> month;
-	} while (month < 1 || month > 12);
-	return month;
-}
-```
-```cpp
-unsigned short read_day_number() {
-	unsigned short day = 1;
-	do {
-		if (day < 1 || day > 31)
-			cout << endl << "Invalid day number, try again: ";
-
-		cout << "Please enter a day number: ";
-		cin >> day;
-	} while (day < 1 || day > 31);
-	return day;
-}
-```
-
-These functions prompt the user to input valid day and month numbers, ensuring they are within acceptable ranges.
-
----
-
 ### `read_date`
 
 ```cpp
 Date read_date() {
-	const unsigned short day = read_day_number();
-	const unsigned short month = read_month_number();
-	const unsigned short year = utils::get_number("Please enter a year: ");
-	return {year, month, day};
+    const unsigned short day = read_day_number();
+    const unsigned short month = read_month_number();
+    const unsigned short year = utils::get_number("Please enter a year: ");
+    return {year, month, day};
 }
 ```
 
@@ -101,11 +108,25 @@ This function reads a complete date from the user, retrieving the day, month, an
 
 ---
 
+### `is_date_before`
+
+```cpp
+bool is_date_before(const Date &date1, const Date &date2) {
+    return date1.year < date2.year ||
+           (date1.year == date2.year && date1.month < date2.month) ||
+           (date1.year == date2.year && date1.month == date2.month && date1.day < date2.day);
+}
+```
+
+This function compares two dates and checks if the first date is earlier than the second date.
+
+---
+
 ### `is_last_day`
 
 ```cpp
 bool is_last_day(const Date &date) {
-	return date.day == get_month_days(date.month, date.year);
+    return date.day == get_month_days(date.month, date.year);
 }
 ```
 
@@ -117,7 +138,7 @@ This function checks if the given date is the last day of the month by comparing
 
 ```cpp
 bool is_last_month(const Date &date) {
-	return date.month == 12;
+    return date.month == 12;
 }
 ```
 
@@ -129,20 +150,20 @@ This function checks if the given date falls in December, which is the last mont
 
 ```cpp
 Date increase_date_by_one_day(Date date) {
-	if (is_last_day(date) && is_last_month(date))
-		++date.year;
+    if (is_last_day(date)) {
+        date.day = 1;
 
-	if (is_last_day(date))
-		date.day = 1;
-	else
-		++date.day;
+        if (is_last_month(date)) {
+            date.month = 1;
+            date.year++;
+        } else {
+            date.month++;
+        }
+    } else {
+        date.day++;
+    }
 
-	if (is_last_month(date))
-		date.month = 1;
-	else
-		++date.month;
-
-	return date;
+    return date;
 }
 ```
 
@@ -153,22 +174,43 @@ This function takes a `Date` object and increments it by one day. It checks if t
 
 ---
 
+### `calc_diff_days`
+
+```cpp
+unsigned short calc_diff_days(Date date1, const Date date2, const bool include_1st = false) {
+    unsigned short days = 0;
+
+    while (is_date_before(date1, date2)) {
+        days++;
+        date1 = increase_date_by_one_day(date1);
+    }
+
+    return include_1st ? days + 1 : days;
+}
+```
+
+This function calculates the difference in days between two dates. It iteratively increases the first date until it reaches the second date, counting the number of days in the process. It can also include the first day in the count if specified.
+
+---
+
 ### `main`
 
 ```cpp
 int main() {
-	const Date date = read_date();
+    const Date date1 = read_date();
 
-	cout << endl;
+    cout << endl;
 
-	const auto [year, month, day] = increase_date_by_one_day(date);
-	cout << "Date after one day: " << day << "/" << month << "/" << year << endl;
+    const Date date2 = read_date();
 
-	return 0;
+    cout << "Difference in days: " << calc_diff_days(date1, date2) << endl;
+    cout << "Difference in days (including 1st day): " << calc_diff_days(date1, date2, true) << endl;
+
+    return 0;
 }
 ```
 
-In the `main` function, the user is prompted to enter a date. The program then calls the `increase_date_by_one_day` function to compute the date one day later and outputs the result in the format `day/month/year`.
+In the `main` function, the user is prompted to enter two dates. The program then calculates and outputs the difference in days between the two dates, both with and without including the first day.
 
 ---
 
@@ -176,12 +218,19 @@ In the `main` function, the user is prompted to enter a date. The program then c
 
 1. **User Input**:
    ```
+   Please enter a day number: 15
+   Please enter a month number: 5
    Please enter a year: 2024
-   Please enter a month number: 12
-   Please enter a day number: 31
+   ```
+
+   ```
+   Please enter a day number: 20
+   Please enter a month number: 6
+   Please enter a year: 2024
    ```
 
 2. **Program Output**:
    ```
-   Date after one day: 1/1/2025
+   Difference in days: 36
+   Difference in days (including 1st day): 37
    ```

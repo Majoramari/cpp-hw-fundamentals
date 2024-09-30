@@ -52,6 +52,12 @@ Date read_date() {
 	return {year, month, day};
 }
 
+bool is_date_before(const Date &date1, const Date &date2) {
+	return date1.year < date2.year ||
+	       (date1.year == date2.year && date1.month < date2.month) ||
+	       (date1.year == date2.year && date1.month == date2.month && date1.day < date2.day);
+}
+
 bool is_last_day(const Date &date) {
 	return date.day == get_month_days(date.month, date.year);
 }
@@ -61,29 +67,42 @@ bool is_last_month(const Date &date) {
 }
 
 Date increase_date_by_one_day(Date date) {
-	if (is_last_day(date) && is_last_month(date))
-		++date.year;
-
-	if (is_last_day(date))
+	if (is_last_day(date)) {
 		date.day = 1;
-	else
-		++date.day;
 
-	if (is_last_month(date))
-		date.month = 1;
-	else
-		++date.month;
+		if (is_last_month(date)) {
+			date.month = 1;
+			date.year++;
+		} else {
+			date.month++;
+		}
+	} else {
+		date.day++;
+	}
 
 	return date;
 }
 
+unsigned short calc_diff_days(Date date1, const Date date2, const bool include_1st = false) {
+	unsigned short days = 0;
+
+	while (is_date_before(date1, date2)) {
+		days++;
+		date1 = increase_date_by_one_day(date1);
+	}
+
+	return include_1st ? days + 1 : days;
+}
+
 int main() {
-	const Date date = read_date();
+	const Date date1 = read_date();
 
 	cout << endl;
 
-	const auto [year, month, day] = increase_date_by_one_day(date);
-	cout << "Date after one day: " << day << "/" << month << "/" << year << endl;
+	const Date date2 = read_date();
+
+	cout << "Difference in days: " << calc_diff_days(date1, date2) << endl;
+	cout << "Difference in days (including 1st day): " << calc_diff_days(date1, date2, true) << endl;
 
 	return 0;
 }
