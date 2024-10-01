@@ -13,15 +13,19 @@ Date get_system_date() {
 	const std::tm local_tm = *localtime(&t);
 
 	return Date{
-		static_cast<unsigned short>(local_tm.tm_year + 1900),
-		static_cast<unsigned short>(local_tm.tm_mon + 1),
-		static_cast<unsigned short>(local_tm.tm_mday)
+		static_cast<short>(local_tm.tm_year + 1900),
+		static_cast<short>(local_tm.tm_mon + 1),
+		static_cast<short>(local_tm.tm_mday)
 	};
+}
+
+int sum() {
+	return 0;
 }
 
 int main() {
 	const Date date1 = read_date();
-	const Date date2 = get_system_date();
+	const Date date2 = read_date();
 
 	cout << "Difference in days: " << calc_diff_days(date1, date2, true) << endl;
 

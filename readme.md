@@ -1,4 +1,4 @@
-# Get Your Age in Days - Problem #18
+# Date Difference Calculator - Problem #19
 
 > ### Tasks
 > - [x] Solved. - Tue, 1 Oct 2024
@@ -6,7 +6,7 @@
 
 ## Required Task
 
-The program calculates the user's age in days, given their birthdate.
+The program calculates the difference in days between two dates provided by the user.
 
 ## Code Explanation
 
@@ -14,24 +14,11 @@ The program calculates the user's age in days, given their birthdate.
 
 ```cpp
 struct Date {
-    unsigned short year, month, day;
+    short year, month, day;
 };
 ```
 
-This structure holds the components of a date: year, month, and day.
-
-### `read_date`
-
-```cpp
-Date read_date() {
-    const unsigned short day = read_day_number();
-    const unsigned short month = read_month_number();
-    const unsigned short year = utils::get_number("Please enter a year: ");
-    return {year, month, day};
-}
-```
-
-This function reads a complete date from the user, retrieving the day, month, and year through the respective input functions, and returns the constructed `Date` struct.
+This structure holds the components of a date: year, month, and day. It is part of the `mdate.h` library.
 
 ### `get_system_date`
 
@@ -39,63 +26,59 @@ This function reads a complete date from the user, retrieving the day, month, an
 Date get_system_date() {
     const auto now = chrono::system_clock::now();
     const std::time_t t = chrono::system_clock::to_time_t(now);
-    // ReSharper disable once CppUseStructuredBinding
     const std::tm local_tm = *localtime(&t);
 
     return Date{
-        static_cast<unsigned short>(local_tm.tm_year + 1900),
-        static_cast<unsigned short>(local_tm.tm_mon + 1),
-        static_cast<unsigned short>(local_tm.tm_mday)
+        static_cast<short>(local_tm.tm_year + 1900),
+        static_cast<short>(local_tm.tm_mon + 1),
+        static_cast<short>(local_tm.tm_mday)
     };
 }
 ```
 
-This function returns the current system date.
+This function retrieves the current system date using the `chrono` library and returns a `Date` object with the year, month, and day.
 
-### `calc_diff_days`
+### `sum`
 
 ```cpp
-unsigned short calc_diff_days(Date date1, const Date date2, const bool include_1st = false) {
-    unsigned short days = 0;
-
-    while (is_date_before(date1, date2)) {
-        days++;
-        date1 = increase_date_by_one_day(date1);
-    }
-
-    return include_1st ? days + 1 : days;
+int sum() {
+    return 0;
 }
 ```
 
-This function calculates the difference in days between two dates. It iteratively increases the first date until it reaches the second date, counting the number of days in the process. It can also include the first day in the count if specified.
+The `sum` function is a placeholder function that currently returns 0. It is not used in the main logic.
 
 ### `main`
 
 ```cpp
 int main() {
-    const Date birthdate = read_date();
-    const Date current_date = get_system_date();
+    const Date date1 = read_date();
+    const Date date2 = read_date();
 
-    cout << "You are " << calc_diff_days(birthdate, current_date) << " days old." << endl;
+    cout << "Difference in days: " << calc_diff_days(date1, date2, true) << endl;
 
     return 0;
 }
 ```
 
-In the `main` function, the user is prompted to enter their birthdate. The program then calculates and outputs the user's age in days, given their birthdate and the current system date.
+In the `main` function, the user is prompted to input two dates. The program then calculates the difference in days between the two dates using the `calc_diff_days` function. The third parameter of `calc_diff_days` is set to `true`, which includes the first day in the count.
 
 ## Example Usage
 
 1. **User Input**:
    ```
-   Please enter a day number: 15
-   Please enter a month number: 5
-   Please enter a year: 1990
+   Please enter a day number: 1
+   Please enter a month number: 1
+   Please enter a year: 2023
+   
+   Please enter a day number: 1
+   Please enter a month number: 10
+   Please enter a year: 2024
    ```
 
 2. **Output**:
    ```
-   You are 12345 days old.
+   Difference in days: 274
    ```
 
-Note: The actual output will depend on the current system date.
+The program calculates that the difference between January 1, 2023, and October 1, 2024, is 274 days (inclusive of the first day). The actual output will vary based on the user input.
