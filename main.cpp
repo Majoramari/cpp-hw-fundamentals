@@ -19,10 +19,6 @@ Date get_system_date() {
 	};
 }
 
-int sum() {
-	return 0;
-}
-
 int main() {
 	const Date date1 = read_date();
 	const Date date2 = read_date();
