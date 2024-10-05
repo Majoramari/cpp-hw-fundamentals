@@ -2,22 +2,29 @@
 
 using namespace std;
 
-int read_number() {
-	int number;
-	cout << "Enter a number: ";
-	cin >> number;
-	return number;
+struct Application {
+	int age;
+	bool has_driver_license;
+};
+
+Application read_applicant_data() {
+	Application app{};
+	cout << "How old are you?: ";
+	cin >> app.age;
+	cout << "Do you have a driver license? (1 for yes, 0 for no): ";
+	cin >> app.has_driver_license;
+	return app;
 }
 
-bool is_even(const int &number) {
-	return number % 2 == 0;
-}
-
-void print_number_type(const int &number) {
-	cout << "The number is: " << (is_even(number) ? "Even" : "Odd") << endl;
+void check_approval_criteria(const Application &app) {
+	if (app.age >= 21 && app.has_driver_license)
+		cout << "Application approved!" << endl;
+	else
+		cout << "Application denied..." << endl;
 }
 
 int main() {
-	print_number_type(read_number());
+	const Application app = read_applicant_data();
+	check_approval_criteria(app);
 	return 0;
 }
