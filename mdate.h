@@ -1,6 +1,7 @@
 #ifndef MDATE_H
 #define MDATE_H
 #include <iostream>
+#include <chrono>
 
 #include "utils.h"
 
@@ -10,6 +11,19 @@ namespace m_date {
 	struct Date {
 		short year, month, day;
 	};
+
+	inline Date get_system_date() {
+		const auto now = chrono::system_clock::now();
+		const std::time_t t = chrono::system_clock::to_time_t(now);
+		// ReSharper disable once CppUseStructuredBinding
+		const std::tm local_tm = *localtime(&t);
+
+		return Date{
+			static_cast<short>(local_tm.tm_year + 1900),
+			static_cast<short>(local_tm.tm_mon + 1),
+			static_cast<short>(local_tm.tm_mday)
+		};
+	}
 
 	inline short read_month_number() {
 		short month = 1;
@@ -46,6 +60,86 @@ namespace m_date {
 			return 29;
 
 		return days_in_month[month - 1];
+	}
+
+	inline short calc_day_order(const Date &date) {
+		const int a = (14 - date.month) / 12;
+		const int y = date.year - a;
+		const int m = date.month + 12 * a - 2;
+
+		return static_cast<short>((date.day + y + y / 4 - y / 100 + y / 400 + 31 * m / 12) % 7);
+	}
+
+	inline string get_week_short_name(const short day) {
+		switch (day) {
+			case 0:
+				return "Sun";
+			case 1:
+				return "Mon";
+			case 2:
+				return "Tue";
+			case 3:
+				return "Wed";
+			case 4:
+				return "Thu";
+			case 5:
+				return "Fri";
+			case 6:
+				return "Sat";
+			default:
+				return "Invalid day";
+		}
+	}
+
+	inline string get_month_short_name(const short month) {
+		switch (month) {
+			case 1:
+				return "Jan";
+			case 2:
+				return "Feb";
+			case 3:
+				return "Mar";
+			case 4:
+				return "Apr";
+			case 5:
+				return "May";
+			case 6:
+				return "Jun";
+			case 7:
+				return "Jul";
+			case 8:
+				return "Aug";
+			case 9:
+				return "Sep";
+			case 10:
+				return "Oct";
+			case 11:
+				return "Nov";
+			case 12:
+				return "Dec";
+			default:
+				return "Invalid month";
+		}
+	}
+
+	inline bool is_end_of_week(const Date &date) {
+		return calc_day_order(date) == 6;
+	}
+
+	inline bool is_weekend(const Date &date) {
+		return calc_day_order(date) == 5 || calc_day_order(date) == 6;
+	}
+
+	inline bool is_business_day(const Date &date) {
+		return !is_weekend(date);
+	}
+
+	inline short get_days_until_weekend(const Date &date) {
+		return static_cast<short>(6 - calc_day_order(date));
+	}
+
+	inline short get_days_until_end_of_month(const Date &date) {
+		return static_cast<short>(get_month_days(date.month, date.year) - date.day);
 	}
 
 	inline Date read_date() {

@@ -1,29 +1,40 @@
-#include <chrono>
 #include <iostream>
+#include <string>
 
 #include "mdate.h"
 
 using namespace std;
 using namespace m_date;
 
-Date get_system_date() {
-	const auto now = chrono::system_clock::now();
-	const std::time_t t = chrono::system_clock::to_time_t(now);
-	// ReSharper disable once CppUseStructuredBinding
-	const std::tm local_tm = *localtime(&t);
-
-	return Date{
-		static_cast<short>(local_tm.tm_year + 1900),
-		static_cast<short>(local_tm.tm_mon + 1),
-		static_cast<short>(local_tm.tm_mday)
-	};
-}
-
 int main() {
-	const Date date1 = read_date();
-	const Date date2 = read_date();
+	const Date date = get_system_date();
 
-	cout << "Difference in days: " << calc_diff_days(date1, date2, true) << endl;
+	cout << endl << "Today is " << get_week_short_name(calc_day_order(date)) << ", "
+			<< date.day << " " << get_month_short_name(date.month) << " " << date.year << endl;
+
+	cout << endl << "Is it end of week?" << endl;
+	if (is_last_day(date))
+		cout << "Yes. It is Saturday, it is the end of week." << endl;
+	else
+		cout << "No. It is not the end of week." << endl;
+
+	cout << endl << "Is it Weekend?" << endl;
+	if (is_weekend(date))
+		cout << "Yes. It is Saturday or Sunday." << endl;
+	else
+		cout << "No. Today is " << get_week_short_name(calc_day_order(date)) << "." << endl;
+
+	cout << endl << "Is it business day?" << endl;
+	if (is_business_day(date))
+		cout << "Yes. Today is " << get_week_short_name(calc_day_order(date)) << "." << endl;
+	else
+		cout << "No. It is " << get_week_short_name(calc_day_order(date)) << "." << endl;
+
+	cout << endl << "How many days until end of week?" << endl;
+	cout << get_days_until_weekend(date) << " days until end of week." << endl;
+
+	cout << endl << "How many days until end of month?" << endl;
+	cout << get_days_until_end_of_month(date) << " days until end of month." << endl;
 
 	return 0;
 }
