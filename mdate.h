@@ -187,6 +187,18 @@ namespace m_date {
 		date2 = temp;
 	}
 
+	inline short count_business_days_in_range(Date start_date, const Date end_date) {
+		short weekend_count = 0;
+
+		while (is_date_before(start_date, end_date)) {
+			if (!is_weekend(start_date))
+				weekend_count++;
+			start_date = increase_date_by_one_day(start_date);
+		}
+
+		return weekend_count;
+	}
+
 	inline short calc_diff_days(Date date1, Date date2, const bool include_1st = false) {
 		int days = 0;
 		short swap_flag = 1;
