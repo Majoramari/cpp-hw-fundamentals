@@ -35,7 +35,7 @@ GameMove get_user_input() {
 
 GameMove get_computer_input() {
 	random_device rd;
-	mt19937::result_type seed = rd();
+	const mt19937::result_type seed = rd();
 	mt19937 gen(seed);
 
 	uniform_int_distribution distribution(1, 3);
