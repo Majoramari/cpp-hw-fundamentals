@@ -181,6 +181,27 @@ namespace m_date {
 		return date;
 	}
 
+	inline Date calc_vacation_return_date(Date date, const short &days) {
+		short days_remaining = days;
+
+		while (is_weekend(date)) {
+			date = increase_date_by_one_day(date);
+		}
+
+		while (days_remaining > 0) {
+			if (!is_weekend(date)) {
+				days_remaining--;
+			}
+			date = increase_date_by_one_day(date);
+		}
+
+		while (is_weekend(date)) {
+			date = increase_date_by_one_day(date);
+		}
+
+		return date;
+	}
+
 	inline void swap_dates(Date &date1, Date &date2) {
 		const Date temp = date1;
 		date1 = date2;

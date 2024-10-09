@@ -5,26 +5,17 @@
 
 using namespace std;
 using namespace m_date;
+using namespace utils;
 
 int main() {
 	cout << "Vacation starts" << endl;
-	const Date start_date = read_date();
+	const Date date = read_date();
 
-	cout << "Vacation ends" << endl;
-	const Date end_date = read_date();
+	const int vacation_days = get_number("Please enter vacation days: ");
 
-	cout << "Vacation from: " << get_week_short_name(start_date.day) << ", "
-			<< start_date.day << "/"
-			<< start_date.month << "/"
-			<< start_date.year << endl;
+	const Date return_date = calc_vacation_return_date(date, vacation_days);
 
-	cout << "Vacation to: " << get_week_short_name(end_date.day) << ", "
-			<< end_date.day << "/"
-			<< end_date.month << "/"
-			<< end_date.year << endl;
-
-	const short days = count_business_days_in_range(start_date, end_date);
-	cout << endl << "Actual vacation days is: " << days << endl;
+	cout << endl << "Return date: " << return_date.day << "/" << return_date.month << "/" << return_date.year << endl;
 
 	return 0;
 }
