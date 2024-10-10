@@ -8,14 +8,16 @@ using namespace m_date;
 using namespace utils;
 
 int main() {
-	cout << "Vacation starts" << endl;
-	const Date date = read_date();
+	cout << "Enter Date1:" << endl;
+	const Date date1 = read_date();
 
-	const int vacation_days = get_number("Please enter vacation days: ");
+	cout << "Enter Date2:" << endl;
+	const Date date2 = read_date();
 
-	const Date return_date = calc_vacation_return_date(date, vacation_days);
-
-	cout << endl << "Return date: " << return_date.day << "/" << return_date.month << "/" << return_date.year << endl;
+	if (is_date_after(date1, date2))
+		cout << "Yes, Date1 is after Date2" << endl;
+	else
+		cout << "No, Date1 is not after Date2" << endl;
 
 	return 0;
 }

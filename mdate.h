@@ -156,6 +156,12 @@ namespace m_date {
 		       (date1.year == date2.year && date1.month == date2.month && date1.day < date2.day);
 	}
 
+	inline bool is_date_after(const Date &date1, const Date &date2) {
+		return date1.year > date2.year ||
+		       (date1.year == date2.year && date1.month > date2.month) ||
+		       (date1.year == date2.year && date1.month == date2.month && date1.day > date2.day);
+	}
+
 	inline bool is_last_day(const Date &date) {
 		return date.day == get_month_days(date.month, date.year);
 	}
