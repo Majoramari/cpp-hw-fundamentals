@@ -8,6 +8,12 @@
 using namespace std;
 
 namespace m_date {
+	enum class DateCompareResult {
+		BEFORE = -1,
+		EQUAL = 0,
+		AFTER = 1
+	};
+
 	struct Date {
 		short year, month, day;
 	};
@@ -162,6 +168,10 @@ namespace m_date {
 		       (date1.year == date2.year && date1.month == date2.month && date1.day > date2.day);
 	}
 
+	inline bool is_date_equal(const Date &date1, const Date &date2) {
+		return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
+	}
+
 	inline bool is_last_day(const Date &date) {
 		return date.day == get_month_days(date.month, date.year);
 	}
@@ -213,6 +223,17 @@ namespace m_date {
 		date1 = date2;
 		date2 = temp;
 	}
+
+	inline DateCompareResult compare_dates(const Date date1, const Date date2) {
+		if (is_date_before(date1, date2))
+			return DateCompareResult::BEFORE;
+
+		if (is_date_equal(date1, date2))
+			return DateCompareResult::EQUAL;
+
+		return DateCompareResult::AFTER;
+	}
+
 
 	inline short count_business_days_in_range(Date start_date, const Date end_date) {
 		short weekend_count = 0;

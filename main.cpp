@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string>
 
 #include "mdate.h"
 
@@ -14,10 +13,7 @@ int main() {
 	cout << "Enter Date2:" << endl;
 	const Date date2 = read_date();
 
-	if (is_date_after(date1, date2))
-		cout << "Yes, Date1 is after Date2" << endl;
-	else
-		cout << "No, Date1 is not after Date2" << endl;
+	cout << "Compare result:" << static_cast<int>(compare_dates(date1, date2)) << endl;
 
 	return 0;
 }
