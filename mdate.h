@@ -234,6 +234,11 @@ namespace m_date {
 		return DateCompareResult::AFTER;
 	}
 
+	inline bool is_valid_date(const Date &date) {
+		return date.year > 0 &&
+		       date.month > 0 && date.month <= 12 &&
+		       date.day > 0 && date.day <= get_month_days(date.month, date.year);
+	}
 
 	inline short count_business_days_in_range(Date start_date, const Date end_date) {
 		short weekend_count = 0;

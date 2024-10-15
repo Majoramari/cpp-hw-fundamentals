@@ -7,13 +7,12 @@ using namespace m_date;
 using namespace utils;
 
 int main() {
-	cout << "Enter Date1:" << endl;
-	const Date date1 = read_date();
+	const Date date = read_date();
 
-	cout << "Enter Date2:" << endl;
-	const Date date2 = read_date();
-
-	cout << "Compare result:" << static_cast<int>(compare_dates(date1, date2)) << endl;
+	if (is_valid_date(date))
+		cout << "Yes, Date is valid!" << endl;
+	else
+		cout << "No, Date is not valid!" << endl;
 
 	return 0;
 }
