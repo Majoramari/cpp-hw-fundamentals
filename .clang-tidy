@@ -65,13 +65,13 @@ CheckOptions:
   - key: readability-identifier-naming.UnionMemberCase
     value: lower_case
 
-  # Enum Members
+  # Enum Members (Set to UPPER_CASE)
   - key: readability-identifier-naming.EnumConstantCase
     value: UPPER_CASE
 
   # Other Constants
   - key: readability-identifier-naming.ConstantCase
-    value: UPPER_CASE
+    value: lower_case
 
   # Global Constants
   - key: readability-identifier-naming.GlobalConstantCase
@@ -96,6 +96,7 @@ CheckOptions:
   # Events
   - key: readability-identifier-naming.EventCase
     value: CamelCase
+
 
 # Additional Check Options
   # Modernize Rules
