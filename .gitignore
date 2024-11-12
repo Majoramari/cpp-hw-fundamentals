@@ -4,6 +4,9 @@ cmake-build-release/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
+compile_commands.json
+out/
+.cache
 
 # Executables and object files
 *.o

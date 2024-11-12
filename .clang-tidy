@@ -1,0 +1,144 @@
+# ~/.config/clang/.clang-tidy
+Checks: >
+  -*,
+  readability-identifier-naming,
+  cppcoreguidelines-*,            # General C++ core guidelines
+  modernize-*,                     # Suggestions for modern C++ usage (C++11 and later)
+  performance-*,                   # Performance improvements
+  readability-*,                   # Readability improvements
+  bugprone-*,                      # Detects common bugs and mistakes
+  misc-*,                          # Miscellaneous helpful checks
+
+# Naming conventions (as in previous configuration)
+CheckOptions:
+  # Classes and Structs
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.StructCase
+    value: CamelCase
+
+  # Concepts
+  - key: readability-identifier-naming.ConceptCase
+    value: lower_case
+
+  # Enums
+  - key: readability-identifier-naming.EnumCase
+    value: CamelCase
+
+  # Unions
+  - key: readability-identifier-naming.UnionCase
+    value: lower_case
+
+  # Template Parameters
+  - key: readability-identifier-naming.TemplateParameterCase
+    value: CamelCase
+
+  # Parameters
+  - key: readability-identifier-naming.ParameterCase
+    value: lower_case
+
+  # Local Variables
+  - key: readability-identifier-naming.VariableCase
+    value: lower_case
+
+  # Global Variables
+  - key: readability-identifier-naming.GlobalVariableCase
+    value: g_lower_case
+
+  # Global Functions
+  - key: readability-identifier-naming.FunctionCase
+    value: lower_case
+
+  # Class and Struct Methods
+  - key: readability-identifier-naming.MethodCase
+    value: lower_case
+
+  # Class and Struct Fields
+  - key: readability-identifier-naming.MemberCase
+    value: lower_case_
+
+  # Class and Struct Public Fields
+  - key: readability-identifier-naming.PublicMemberCase
+    value: lower_case
+
+  # Union Members
+  - key: readability-identifier-naming.UnionMemberCase
+    value: lower_case
+
+  # Enum Members
+  - key: readability-identifier-naming.EnumConstantCase
+    value: UPPER_CASE
+
+  # Other Constants
+  - key: readability-identifier-naming.ConstantCase
+    value: UPPER_CASE
+
+  # Global Constants
+  - key: readability-identifier-naming.GlobalConstantCase
+    value: UPPER_CASE
+
+  # Namespaces
+  - key: readability-identifier-naming.NamespaceCase
+    value: lower_case
+
+  # Typedefs
+  - key: readability-identifier-naming.TypedefCase
+    value: CamelCase
+
+  # Macros
+  - key: readability-identifier-naming.MacroDefinitionCase
+    value: UPPER_CASE
+
+  # Properties
+  - key: readability-identifier-naming.PropertyCase
+    value: CamelCase
+
+  # Events
+  - key: readability-identifier-naming.EventCase
+    value: CamelCase
+
+# Additional Check Options
+  # Modernize Rules
+  - key: modernize-use-auto                # Use `auto` where appropriate
+    value: true
+  - key: modernize-use-nullptr             # Use `nullptr` instead of `NULL`
+    value: true
+  - key: modernize-use-override            # Use `override` for virtual functions
+    value: true
+  - key: modernize-avoid-c-arrays          # Prefer `std::array` or `std::vector` over C-style arrays
+    value: true
+
+  # Performance Rules
+  - key: performance-unnecessary-value-param # Avoid passing large types by value
+    value: true
+  - key: performance-implicit-conversion     # Avoid implicit conversions that may degrade performance
+    value: true
+  - key: performance-inefficient-vector-operation # Detect inefficient `std::vector` operations
+    value: true
+
+  # Readability Rules
+  - key: readability-magic-numbers          # Warn against "magic numbers" without context
+    value: true
+  - key: readability-const-return-type      # Prefer `const` for function return types when possible
+    value: true
+  - key: readability-static-accessed-through-instance # Detect accessing static members through an instance
+    value: true
+
+  # Bugprone Rules
+  - key: bugprone-argument-comment          # Detect function arguments without inline comments
+    value: true
+  - key: bugprone-macro-parentheses         # Ensure macros use parentheses correctly
+    value: true
+  - key: bugprone-narrowing-conversions     # Detect potential narrowing conversions
+    value: true
+  - key: bugprone-branch-clone              # Detect duplicated branches in conditional structures
+    value: true
+
+  # Miscellaneous Rules
+  - key: misc-unused-parameters             # Warn about unused function parameters
+    value: true
+  - key: misc-non-private-member-variables-in-classes # Warn about non-private data members in classes
+    value: true
+  - key: misc-definitions-in-headers        # Warn about definitions in header files
+    value: true
+
