@@ -1,13 +1,14 @@
 # ~/.config/clang/.clang-tidy
 Checks: >
-  -*,
-  readability-identifier-naming,
-  cppcoreguidelines-*,            # General C++ core guidelines
-  modernize-*,                     # Suggestions for modern C++ usage (C++11 and later)
-  performance-*,                   # Performance improvements
-  readability-*,                   # Readability improvements
-  bugprone-*,                      # Detects common bugs and mistakes
-  misc-*,                          # Miscellaneous helpful checks
+  readability-*,
+  bugprone-*,
+  bugprone-*,
+  cppcoreguidelines-pro-*,
+  modernize-*,
+  misc-*,
+  -misc-non-private-member-variables-in-classes,
+  -modernize-use-trailing-*,
+  -readability-magic-numbers,
 
 # Naming conventions (as in previous configuration)
 CheckOptions:
@@ -43,7 +44,10 @@ CheckOptions:
 
   # Global Variables
   - key: readability-identifier-naming.GlobalVariableCase
-    value: g_lower_case
+    value: lower_case
+
+  - key: readability-identifier-naming.GlobalVariablePrefix
+    value: "g_"
 
   # Global Functions
   - key: readability-identifier-naming.FunctionCase
@@ -107,8 +111,6 @@ CheckOptions:
 
 # Additional Check Options
   # Modernize Rules
-  - key: modernize-use-auto                # Use `auto` where appropriate
-    value: true
   - key: modernize-use-nullptr             # Use `nullptr` instead of `NULL`
     value: true
   - key: modernize-use-override            # Use `override` for virtual functions
@@ -125,8 +127,6 @@ CheckOptions:
     value: true
 
   # Readability Rules
-  - key: readability-magic-numbers          # Warn against "magic numbers" without context
-    value: true
   - key: readability-const-return-type      # Prefer `const` for function return types when possible
     value: true
   - key: readability-static-accessed-through-instance # Detect accessing static members through an instance

@@ -1,4 +1,3 @@
-# .clang-format
 Language: Cpp
 BasedOnStyle: LLVM
 AccessModifierOffset: -4
@@ -27,7 +26,7 @@ BraceWrapping:
 BreakBeforeBraces: Custom
 BreakConstructorInitializers: AfterColon
 BreakConstructorInitializersBeforeComma: false
-ColumnLimit: 120
+ColumnLimit: 80
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
 ContinuationIndentWidth: 8
 IncludeCategories: 
@@ -54,4 +53,8 @@ SpacesInConditionalStatement: false
 SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
 TabWidth: 4
+PenaltyBreakString: 100  # Break long string literals or concatenations
+BinPackParameters: false  # Ensure function parameters are wrapped
+AllowAllParametersOfDeclarationOnNextLine: true  # Wrap parameters across lines if needed
+BreakBeforeBinaryOperators: NonAssignment  # Break operators in complex expressions
 
