@@ -1,19 +1,22 @@
 #include "utils.h"
+#include <iostream>
 #include <limits>
 #include <random>
-#include <iostream>
 
-using namespace std;
+using std::cin;
+using std::cout;
+using std::string;
+using std::uniform_int_distribution;
 
 namespace utils {
-    int get_number(const string &message) {
+    static int read_number(const string &message) {
         int number = 0;
         cout << message;
         cin >> number;
 
         while (cin.fail()) {
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
             cout << "Invalid number, try again: ";
             cin >> number;
@@ -21,14 +24,14 @@ namespace utils {
         return number;
     }
 
-    string get_string(const string &message) {
+    static string read_string(const string &message) {
         string input;
         cout << message;
         getline(cin, input);
 
         while (cin.fail()) {
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
             cout << "Invalid string, try again: ";
             getline(cin, input);
@@ -38,10 +41,10 @@ namespace utils {
     }
 
     int gen_random_int(const int &min, const int &max) {
-        random_device rd;
-        mt19937 generator(rd());
+        std::random_device random_device;
+        std::mt19937 generator(random_device());
         uniform_int_distribution<int> distribution(min, max);
 
         return distribution(generator);
     }
-}
+} // namespace utils
