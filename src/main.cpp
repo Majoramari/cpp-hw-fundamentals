@@ -16,7 +16,10 @@ namespace utils {
 } // namespace utils
 
 namespace {
-    double calc_circle_area(int length) { return pow(length, 2) / (4 * M_PI); }
+    double calc_circle_area(double side, double base) {
+        return M_PI * (pow(base, 2) / 4)
+               * ((2 * side - base) / (2 * side + base));
+    }
 
     void print_result(double area) {
         cout << "The area of the circle is " << area << endl;
@@ -24,9 +27,10 @@ namespace {
 } // namespace
 
 int main() {
-    int length = utils::read_number("Please enter the length of the circle: ");
+    int side = utils::read_number("Please enter the side of the tringle: ");
+    int base = utils::read_number("Please enter the base of the tringle: ");
 
-    double circle_area = calc_circle_area(length);
+    double circle_area = calc_circle_area(side, base);
 
     print_result(circle_area);
 
