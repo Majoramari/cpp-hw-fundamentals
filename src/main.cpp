@@ -16,9 +16,7 @@ namespace utils {
 } // namespace utils
 
 namespace {
-    double calc_circle_area(int diameter) {
-        return (M_PI * pow(diameter, 2)) / 4;
-    }
+    double calc_circle_area(int length) { return pow(length, 2) / (4 * M_PI); }
 
     void print_result(double area) {
         cout << "The area of the circle is " << area << endl;
@@ -26,10 +24,9 @@ namespace {
 } // namespace
 
 int main() {
-    int diameter =
-            utils::read_number("Please enter the diameter of the circle: ");
+    int length = utils::read_number("Please enter the length of the circle: ");
 
-    double circle_area = calc_circle_area(diameter);
+    double circle_area = calc_circle_area(length);
 
     print_result(circle_area);
 
