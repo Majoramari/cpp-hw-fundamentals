@@ -15,17 +15,25 @@ namespace utils {
 } // namespace utils
 
 namespace {
-    void print_numbers_up_to(int number) {
+    int calc_factorial(int number) {
+        int sum = 1;
         for (int i = 1; i <= number; i++) {
-            cout << i << endl;
+            sum *= i;
         }
+        return sum;
+    }
+
+    void print_factorial_result(int number, int result) {
+        cout << "Factorial of " << number << " is " << result << endl;
     }
 } // namespace
 
 int main() {
     int number = utils::read_number();
 
-    print_numbers_up_to(number);
+    int factorial = calc_factorial(number);
+
+    print_factorial_result(number, factorial);
 
     return 0;
 }
