@@ -12,28 +12,39 @@ namespace utils {
         cin >> number;
         return number;
     }
+
+
 } // namespace utils
 
 namespace {
-    int calc_factorial(int number) {
-        int sum = 1;
-        for (int i = 1; i <= number; i++) {
-            sum *= i;
+    char get_grade_letter(const int grade) {
+        if (grade >= 90 && grade <= 100) {
+            return 'A';
         }
-        return sum;
+        if (grade >= 80 && grade <= 89) {
+            return 'B';
+        }
+        if (grade >= 70 && grade <= 79) {
+            return 'C';
+        }
+        if (grade >= 60 && grade <= 69) {
+            return 'D';
+        }
+        if (grade >= 50 && grade <= 59) {
+            return 'E';
+        }
+        return 'F';
     }
 
-    void print_factorial_result(int number, int result) {
-        cout << "Factorial of " << number << " is " << result << endl;
-    }
+    void print_result(char grade) { cout << "You got: " << grade << endl; }
 } // namespace
 
 int main() {
     int number = utils::read_number();
 
-    int factorial = calc_factorial(number);
+    char grade = get_grade_letter(number);
 
-    print_factorial_result(number, factorial);
+    print_result(grade);
 
     return 0;
 }
