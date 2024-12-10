@@ -9,6 +9,3 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 
 # Add the executable (with the main.cpp from src)
 add_executable(learn src/main.cpp)
-
-# Optionally, you can add any other source files here if needed
-
