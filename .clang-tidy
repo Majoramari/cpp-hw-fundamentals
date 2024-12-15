@@ -11,6 +11,7 @@ Checks: >
   -modernize-use-trailing-*,
   -readability-magic-numbers,
   -bugprone-easily-swappable-parameters,
+  -readability-braces-around-statements,
 
 # Naming conventions (as in previous configuration)
 CheckOptions:
