@@ -3,36 +3,44 @@
 using std::cin;
 using std::cout;
 using std::endl;
-using std::string;
 
-static int read_number(const string &message = "Please enter a number: ") {
+static int read_positive_number() {
     int number = 0;
-    cout << message;
-    cin >> number;
+    do {
+        cout << "Please enter a number: ";
+        cin >> number;
+    } while (number <= 0);
     return number;
 }
 
-static bool is_prime(int number) {
-    if (number <= 1) return false;
+static int reverse_number(int number) {
+    int remainder = 0;
+    int placeholder = 0;
 
-
-    for (int i = 2; i <= (number / 2); i++) {
-        if (number % i == 0) return false;
+    while (number > 0) {
+        remainder = number % 10;
+        number /= 10;
+        placeholder = placeholder * 10 + remainder;
     }
 
-    return true;
+    return placeholder;
 }
 
-static void print_primes_1_to_n(int number) {
-    for (int i = 1; i <= number; i++) {
-        if (is_prime(i)) {
-            cout << i << endl;
-        }
+static void print_digits(int number) {
+    int remainder = 0;
+
+    while (number > 0) {
+        remainder = number % 10;
+        number /= 10;
+        cout << remainder << endl;
     }
 }
 
 int main() {
-    int number = read_number();
-    print_primes_1_to_n(number);
+    int number = read_positive_number();
+    int reversed_number = reverse_number(number);
+    
+    print_digits(reversed_number);
+
     return 0;
 }
