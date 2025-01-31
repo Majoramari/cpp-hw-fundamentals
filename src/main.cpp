@@ -1,26 +1,31 @@
-#include "iostream"
+#include <iomanip>
+#include <iostream>
 
 using std::cout;
 using std::endl;
+using std::setw;
+using std::string;
 
-static void print_header() {
-    cout << endl << "\t\t\tMultiaction Table From 1 to 10" << endl;
+namespace types {
+    using u8 = unsigned char;
+}
+
+void print_header() {
+    cout << "\t\t\tMultiplication Table From 1 To 10" << endl;
     cout << "\t1\t2\t3\t4\t5\t6\t7\t8\t9\t10" << endl;
     cout << "__________________________________________________________________"
-         << "_________________" << endl;
+            "________________";
+    cout << endl;
 }
 
-static std::string divider(int position) {
-    return position < 10 ? "    |" : "   |";
-}
+string separator(types::u8 i) { return i < 10 ? "  |" : " |"; }
 
-static void print_multiplication_table() {
-    for (int i = 1; i <= 10; i++) {
+void print_multiplication_table() {
+    for (types::u8 row = 1; row <= 10; ++row) {
+        cout << " " << static_cast<int>(row) << separator(row) << "\t";
 
-        cout << " " << i << divider(i) << "\t";
-
-        for (int j = 1; j <= 10; j++) {
-            cout << i * j << "\t";
+        for (types::u8 col = 1; col <= 10; ++col) {
+            cout << row * col << setw(4) << "\t";
         }
 
         cout << endl;
