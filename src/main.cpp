@@ -1,4 +1,6 @@
+#include <iostream>
+
 int main() {
-    // Starting point, you can add your own code here
+    std::cout << "What?" << std::endl;
     return 0;
 }
