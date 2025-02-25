@@ -63,7 +63,7 @@ CheckOptions:
   - key: readability-identifier-naming.MemberCase
     value: lower_case
 
-  - key: readability-identifier-naming.PrivateMemberSuffix
+  - key: readability-identifier-naming.PrivateMemberPrefix
     value: "_"
 
   - key: readability-identifier-naming.ProtectedMemberSuffix
@@ -71,7 +71,7 @@ CheckOptions:
 
   - key: readability-identifier-naming.PublicMemberSuffix
     value: ""
-    
+
   - key: readability-identifier-naming.PublicMemberCase
     value: lower_case
 
@@ -111,45 +111,43 @@ CheckOptions:
   - key: readability-identifier-naming.EventCase
     value: CamelCase
 
-
-# Additional Check Options
+  # Additional Check Options
   # Modernize Rules
-  - key: modernize-use-nullptr             # Use `nullptr` instead of `NULL`
+  - key: modernize-use-nullptr # Use `nullptr` instead of `NULL`
     value: true
-  - key: modernize-use-override            # Use `override` for virtual functions
+  - key: modernize-use-override # Use `override` for virtual functions
     value: true
-  - key: modernize-avoid-c-arrays          # Prefer `std::array` or `std::vector` over C-style arrays
+  - key: modernize-avoid-c-arrays # Prefer `std::array` or `std::vector` over C-style arrays
     value: true
 
   # Performance Rules
   - key: performance-unnecessary-value-param # Avoid passing large types by value
     value: true
-  - key: performance-implicit-conversion     # Avoid implicit conversions that may degrade performance
+  - key: performance-implicit-conversion # Avoid implicit conversions that may degrade performance
     value: true
   - key: performance-inefficient-vector-operation # Detect inefficient `std::vector` operations
     value: true
 
   # Readability Rules
-  - key: readability-const-return-type      # Prefer `const` for function return types when possible
+  - key: readability-const-return-type # Prefer `const` for function return types when possible
     value: true
   - key: readability-static-accessed-through-instance # Detect accessing static members through an instance
     value: true
 
   # Bugprone Rules
-  - key: bugprone-argument-comment          # Detect function arguments without inline comments
+  - key: bugprone-argument-comment # Detect function arguments without inline comments
     value: true
-  - key: bugprone-macro-parentheses         # Ensure macros use parentheses correctly
+  - key: bugprone-macro-parentheses # Ensure macros use parentheses correctly
     value: true
-  - key: bugprone-narrowing-conversions     # Detect potential narrowing conversions
+  - key: bugprone-narrowing-conversions # Detect potential narrowing conversions
     value: true
-  - key: bugprone-branch-clone              # Detect duplicated branches in conditional structures
+  - key: bugprone-branch-clone # Detect duplicated branches in conditional structures
     value: true
 
   # Miscellaneous Rules
-  - key: misc-unused-parameters             # Warn about unused function parameters
+  - key: misc-unused-parameters # Warn about unused function parameters
     value: true
   - key: misc-non-private-member-variables-in-classes # Warn about non-private data members in classes
     value: true
-  - key: misc-definitions-in-headers        # Warn about definitions in header files
+  - key: misc-definitions-in-headers # Warn about definitions in header files
     value: true
-
