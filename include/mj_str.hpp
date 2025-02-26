@@ -2,10 +2,13 @@
 #define MJ_STR_HPP
 
 #include <array>
+#include <numeric>
 #include <string>
 #include <vector>
 
+using std::accumulate;
 using std::array;
+using std::next;
 using std::string;
 using std::vector;
 
