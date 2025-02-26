@@ -6,7 +6,8 @@ AlignConsecutiveDeclarations: false
 AlignOperands: true
 AlignTrailingComments: false
 AlwaysBreakTemplateDeclarations: Yes
-BraceWrapping: 
+AlwaysBreakAfterReturnType: None # Do not break the return type from the function name.
+BraceWrapping:
   AfterCaseLabel: false
   AfterClass: false
   AfterControlStatement: false
@@ -26,22 +27,22 @@ BraceWrapping:
 BreakBeforeBraces: Custom
 BreakConstructorInitializers: AfterColon
 BreakConstructorInitializersBeforeComma: false
-ColumnLimit: 80
+ColumnLimit: 100
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
 ContinuationIndentWidth: 8
-IncludeCategories: 
-  - Regex: '^<.*'
+IncludeCategories:
+  - Regex: "^<.*"
     Priority: 1
   - Regex: '^".*'
     Priority: 2
-  - Regex: '.*'
+  - Regex: ".*"
     Priority: 3
-IncludeIsMainRegex: '([-_](test|unittest))?$'
+IncludeIsMainRegex: "([-_](test|unittest))?$"
 IndentCaseLabels: true
 IndentWidth: 4
 InsertNewlineAtEOF: true
-MacroBlockBegin: ''
-MacroBlockEnd: ''
+MacroBlockBegin: ""
+MacroBlockEnd: ""
 MaxEmptyLinesToKeep: 2
 NamespaceIndentation: All
 SpaceAfterCStyleCast: true
@@ -53,8 +54,8 @@ SpacesInConditionalStatement: false
 SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
 TabWidth: 4
-PenaltyBreakString: 100  # Break long string literals or concatenations
-BinPackParameters: false  # Ensure function parameters are wrapped
-AllowAllParametersOfDeclarationOnNextLine: true  # Wrap parameters across lines if needed
-BreakBeforeBinaryOperators: NonAssignment  # Break operators in complex expressions
-
+PenaltyBreakString: 100 # Break long string literals or concatenations
+BinPackParameters: false # Ensure each parameter is on its own line.
+AllowAllParametersOfDeclarationOnNextLine: true # Allow wrapping parameters across lines.
+BinPackArguments: false # Ensure function call arguments are wrapped.
+BreakBeforeBinaryOperators: NonAssignment # Break operators in complex expressions.
