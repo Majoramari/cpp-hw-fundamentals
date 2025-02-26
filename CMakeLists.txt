@@ -5,8 +5,9 @@ get_filename_component(PROJECT_NAME ${CMAKE_SOURCE_DIR} NAME)
 project(${PROJECT_NAME})
 
 # Set the C++ standard
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_COMPILER clang++) 
 
 # Builds
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/.out/bin/debug)
