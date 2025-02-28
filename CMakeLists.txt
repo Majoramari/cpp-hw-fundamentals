@@ -21,7 +21,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/.out/bin)
 # Find all .cpp files in src directory
 set(SRC_FILES
     src/main.cpp
-    src/libs/str.cpp
+    src/libs/validator.cpp
 )
 
 # Add the executable with all source files
@@ -42,6 +42,7 @@ add_subdirectory(external/googletest)
 
 # Find all test files
 set(TEST_FILES
+    tests/test_utils.cpp
     tests/test_validator.cpp
 )
 
@@ -52,6 +53,7 @@ add_executable(${PROJECT_NAME}_tests ${TEST_FILES})
 target_include_directories(${PROJECT_NAME}_tests PRIVATE
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/templates
+
 )
 
 # Link GoogleTest and the main library
