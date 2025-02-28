@@ -9,11 +9,13 @@ namespace utils {
     }
 
     bool is_prime(int num) {
-        if (num <= 1)
+        if (num <= 1) {
             return false;
+        }
         for (int i = 2; i < num; ++i) {
-            if (num % i == 0)
+            if (num % i == 0) {
                 return false;
+            }
         }
         return true;
     }
@@ -23,8 +25,9 @@ namespace utils {
         std::string token;
         std::istringstream token_stream(str);
         while (std::getline(token_stream, token, delimiter)) {
-            if (!token.empty())
+            if (!token.empty()) {
                 tokens.push_back(token);
+            }
         }
         return tokens;
     }
