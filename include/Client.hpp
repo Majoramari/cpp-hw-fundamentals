@@ -39,6 +39,10 @@ private:
     string _pin_code;
     float _balance;
     Mode _mode;
+
+    // Methods
+    static Client line_to_object(const string &line);
+    static string object_to_line(const Client &client);
 };
 
 
