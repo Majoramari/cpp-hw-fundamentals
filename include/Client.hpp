@@ -32,7 +32,7 @@ public:
     [[nodiscard]] bool is_empty() const;
     void print_info() const;
 
-    static Client find(string &account_id);
+    static Client find(const string &account_id);
 
 private:
     string _account_id;

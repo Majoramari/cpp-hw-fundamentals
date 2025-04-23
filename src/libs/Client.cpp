@@ -1,12 +1,16 @@
 #include "Client.hpp"
 
+#include <Utils.hpp>
+#include <fstream>
 #include <iostream>
 #include <string>
+#include <vector>
 
 using std::cout;
 using std::endl;
 using std::move;
 using std::string;
+using std::vector;
 
 Client::Client(string first_name,
                string last_name,
@@ -46,6 +50,39 @@ void Client::print_info() const {
     cout << "-------------------\n";
 }
 
-Client Client::find(string &account_id) {
+Client Client::find(const string &account_id) {
+    std::ifstream file("clients.txt");
+    if (!file.is_open()) {
+        std::cerr << "No client found, create a new client...\n";
+        return {"", "", "", "", "", "", 0.0F, Mode::EMPTY};
+    }
 
+    vector<Client> clients;
+    string line;
+
+    while (getline(file, line)) {
+        vector<string> tokens = Utils::split(line, "#//#");
+
+        try {
+            const float balance = stof(tokens[6]);
+            clients.emplace_back(tokens[0],
+                                 tokens[1],
+                                 tokens[2],
+                                 tokens[3],
+                                 tokens[4],
+                                 tokens[5],
+                                 balance,
+                                 Mode::UPDATE);
+        } catch (const std::exception &e) {
+            std::cerr << "Error parsing line: " << line << " - " << e.what() << endl;
+        }
+    }
+
+    for (const auto &client: clients) {
+        if (client.get_account_id() == account_id) {
+            return client;
+        }
+    }
+
+    return {"", "", "", "", "", "", 0.0F, Mode::EMPTY};
 }
