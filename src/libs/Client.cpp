@@ -107,3 +107,25 @@ Client Client::find(const string &account_id) {
 
     return {"", "", "", "", "", "", 0.0F, Mode::EMPTY};
 }
+
+bool Client::is_exist(const string &account_id) {
+    std::ifstream file("clients.txt");
+    if (!file.is_open()) {
+        std::cerr << "Can't open clients file\n";
+        return false;
+    }
+
+    string line;
+    while (getline(file, line)) {
+        try {
+            const Client client = line_to_object(line);
+            if (client.get_account_id() == account_id) {
+                return true;
+            }
+        } catch (const std::exception &e) {
+            std::cerr << "Skipping invalid client record: " << e.what() << "\nLine: " << line
+                      << endl;
+        }
+    }
+    return false;
+}
