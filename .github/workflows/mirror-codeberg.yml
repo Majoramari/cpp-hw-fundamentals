@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Clone Codeberg repo as a mirror
         run: |
-          git clone --mirror https://codeberg.org/MajorAmari/cpp-hw-fundamentals repo.git
+          git clone --mirror git@github.com:majoramari/cpp-hw-fundamentals.git repo.git
 
       - name: Push mirror to GitHub
         env:
