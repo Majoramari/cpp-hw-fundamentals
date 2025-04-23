@@ -1,5 +1,5 @@
 # Check if running in VSCode
-if(DEFINED ENV{TERM_PROGRAM} AND "$ENV{TERM_PROGRAM}" STREQUAL "vscode")
+if (DEFINED ENV{TERM_PROGRAM} AND "$ENV{TERM_PROGRAM}" STREQUAL "vscode")
     message(STATUS "VSCode detected - Generating .vscode/launch.json")
 
     # Define file paths
@@ -26,4 +26,4 @@ if(DEFINED ENV{TERM_PROGRAM} AND "$ENV{TERM_PROGRAM}" STREQUAL "vscode")
         }
     ]
 }")
-endif()
+endif ()
