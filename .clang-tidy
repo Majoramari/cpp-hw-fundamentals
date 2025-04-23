@@ -66,6 +66,9 @@ CheckOptions:
   - key: readability-identifier-naming.PrivateMemberPrefix
     value: "_"
 
+  - key: readability-identifier-naming.ProtectedMemberPrefix
+    value: "p_"
+
   - key: readability-identifier-naming.ProtectedMemberSuffix
     value: ""
 
