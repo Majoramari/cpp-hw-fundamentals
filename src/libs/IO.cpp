@@ -6,8 +6,9 @@ using std::cout;
 using std::endl;
 using std::string;
 
-string IO::get_string(const string &message) {
+string IO::get_string(const string &message = "Please enter your input: ") {
     string input;
+    cout << message << endl;
     cin >> input;
     return input;
 }
