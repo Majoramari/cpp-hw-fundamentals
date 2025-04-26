@@ -34,6 +34,7 @@ public:
 
     static bool is_exist(const string &account_id);
     static Client find(const string &account_id);
+    static void update();
 
 private:
     string _account_id;

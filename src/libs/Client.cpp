@@ -1,5 +1,6 @@
 #include "Client.hpp"
 
+#include <IO.hpp>
 #include <Utils.hpp>
 #include <fstream>
 #include <iostream>
@@ -128,4 +129,17 @@ bool Client::is_exist(const string &account_id) {
         }
     }
     return false;
+}
+
+void Client::update() {
+    string account_id = IO::get_string("Enter your account number: ");
+
+    while (!is_exist(account_id)) {
+        cout << "Client " << account_id << " doesn't exist\n";
+        account_id = IO::get_string("Enter your account number: ");
+    };
+
+    Client const client = find(account_id);
+
+    client.print_info();
 }
