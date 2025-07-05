@@ -22,6 +22,7 @@ external/
 
 # Logs and temporary files
 *.log
+.gp.md
 *.tmp
 *~
 
