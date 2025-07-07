@@ -4,12 +4,14 @@
 #include <Utils.hpp>
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
 using std::cout;
 using std::endl;
-using std::move;
+using std::ifstream;
+using std::ofstream;
 using std::string;
 using std::vector;
 
@@ -21,9 +23,9 @@ Client::Client(string first_name,
                string pin_code,
                const float balance,
                const Mode mode)
-    : Person(move(first_name), move(last_name), move(email), move(phone)),
-      _account_id(move(account_id)),
-      _pin_code(move(pin_code)),
+    : Person(std::move(first_name), std::move(last_name), std::move(email), std::move(phone)),
+      _account_id(std::move(account_id)),
+      _pin_code(std::move(pin_code)),
       _balance(balance),
       _mode(mode) {}
 
@@ -52,27 +54,34 @@ void Client::print_info() const {
 }
 
 // Private Methods
-Client Client::line_to_object(const string &line) {
-    vector<string> tokens = Utils::split(line, "#//#");
+Client Client::line_to_object(const std::string &line) {
+    auto fields = Utils::split(line, "#//#");
 
-    if (tokens.size() != 7) {
-        throw std::invalid_argument("Invalid client record format");
+    if (fields.size() != 7) {
+        throw std::invalid_argument("Malformed client record: expected 7 fields, got "
+                                    + std::to_string(fields.size()) + ": '" + line + "'");
     }
 
+    float balance = 0.0F;
     try {
-        const float balance = stof(tokens[6]);
-        return {tokens[0],
-                tokens[1],
-                tokens[2],
-                tokens[3],
-                tokens[4],
-                tokens[5],
-                balance,
-                Mode::UPDATE};
+        balance = std::stof(fields[6]);
     } catch (const std::exception &e) {
-        throw std::runtime_error(string("Conversion error: ") + e.what());
+        throw std::runtime_error(std::string("Invalid balance value '") + fields[6]
+                                 + "': " + e.what());
     }
+
+    return Client{
+            fields[0], // first_name
+            fields[1], // last_name
+            fields[2], // email
+            fields[3], // phone
+            fields[4], // account_id
+            fields[5], // pin_code
+            balance, // balance
+            Mode::UPDATE // mode
+    };
 }
+
 
 string Client::object_to_line(const Client &client) {
     return client.p_first_name + "#//#" + client.p_last_name + "#//#" + client.p_email + "#//#"
@@ -80,9 +89,60 @@ string Client::object_to_line(const Client &client) {
            + std::to_string(client._balance);
 }
 
+void Client::prompt_update_fields() {
+    std::string first_name = IO::get_string("Enter first name: ");
+    std::string last_name = IO::get_string("Enter last name: ");
+    std::string email;
+    while (true) {
+        email = IO::get_string("Enter email: ");
+
+        if (email.find('@') != std::string::npos && email.find('.') != std::string::npos) {
+            break;
+        }
+
+        std::cout << "Invalid email; try again.\n";
+    }
+    std::string phone = IO::get_string("Enter phone: ");
+
+    set_first_name(first_name);
+    set_last_name(last_name);
+    set_email(email);
+    set_phone(phone);
+}
+
+vector<Client> Client::load_clients_from_file() {
+    vector<Client> clients;
+
+    ifstream file("clients.txt");
+    if (!file) {
+        throw std::runtime_error{"Could not open clients.txt"};
+    }
+
+    for (string line; getline(file, line);) {
+        clients.emplace_back(line_to_object(line));
+    }
+
+    return clients;
+}
+
+void Client::save_clients_to_file(const vector<Client> &clients) {
+    ofstream file("clients.txt", std::ios::trunc);
+    if (!file) {
+        throw std::runtime_error{"Could not open clients.txt"};
+    }
+
+    for (Client client: clients) {
+        string line = object_to_line(client);
+        file << line << '\n';
+        if (file.fail()) {
+            throw std::runtime_error{"Failed to write to clients.txt"};
+        }
+    }
+}
+
 // Public methods
 Client Client::find(const string &account_id) {
-    std::ifstream file("clients.txt");
+    ifstream file("clients.txt");
     if (!file.is_open()) {
         std::cerr << "No client found, create a new client...\n";
         return {"", "", "", "", "", "", 0.0F, Mode::EMPTY};
@@ -110,7 +170,7 @@ Client Client::find(const string &account_id) {
 }
 
 bool Client::is_exist(const string &account_id) {
-    std::ifstream file("clients.txt");
+    ifstream file("clients.txt");
     if (!file.is_open()) {
         std::cerr << "Can't open clients file\n";
         return false;
@@ -131,6 +191,28 @@ bool Client::is_exist(const string &account_id) {
     return false;
 }
 
+Client::SaveResult Client::save() {
+    if (_mode == Mode::EMPTY) {
+        return Client::SaveResult::FAIL_EMPTY_OBJ;
+    }
+
+    if (_mode == Mode::UPDATE) {
+        vector<Client> clients = load_clients_from_file();
+
+        for (Client &client: clients) {
+            if (client.get_account_id() == _account_id) {
+                client = *this;
+                break;
+            }
+        }
+
+        save_clients_to_file(clients);
+        return Client::SaveResult::SUCCEED;
+    }
+
+    return Client::SaveResult::FAIL_UNKNOWN;
+}
+
 void Client::update() {
     string account_id = IO::get_string("Enter your account number: ");
 
@@ -139,7 +221,14 @@ void Client::update() {
         account_id = IO::get_string("Enter your account number: ");
     };
 
-    Client const client = find(account_id);
+    Client client = find(account_id);
 
     client.print_info();
+
+    std::cout << "\n\nUpdate Client Info:\n"
+              << "-------------------\n";
+
+    client.prompt_update_fields();
+
+    client.save();
 }
