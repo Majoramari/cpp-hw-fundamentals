@@ -42,13 +42,15 @@ public:
     [[nodiscard]] bool is_empty() const;
     void print_info() const;
 
+    SaveResult save();
+    
+    // Statics
     static bool is_exist(const string &account_id);
     static Client find(const string &account_id);
     static void add();
     static void remove();
     static void update();
-
-    SaveResult save();
+    static void list();
 
 private:
     string _account_id;

@@ -335,3 +335,39 @@ void Client::update() {
     client.prompt_update_fields();
     client.save();
 }
+
+void Client::list() {
+    auto clients = load_clients_from_file();
+
+    cout << "\n\t\t\tclients (" << clients.size() << ")";
+    cout << "\n______________________________________________________________"
+         << "_____________________________________\n";
+
+    cout << "| " << std::left << std::setw(12) << "Account id";
+    cout << "| " << std::left << std::setw(20) << "Full Name";
+    cout << "| " << std::left << std::setw(12) << "Phone";
+    cout << "| " << std::left << std::setw(20) << "Email";
+    cout << "| " << std::left << std::setw(10) << "Pin Code";
+    cout << "| " << std::left << std::setw(12) << "Balance";
+    cout << "\n______________________________________________________________"
+         << "_____________________________________\n";
+
+
+    if (clients.size() == 0) {
+        cout << "There are no clients in the database.\n";
+    }
+
+    for (const Client &client: clients) {
+        cout << "| " << std::left << std::setw(12) << client.get_account_id();
+        cout << "| " << std::left << std::setw(20)
+             << client.get_first_name() + " " + client.get_last_name();
+        cout << "| " << std::left << std::setw(12) << client.get_phone();
+        cout << "| " << std::left << std::setw(20) << client.get_email();
+        cout << "| " << std::left << std::setw(10) << client.get_pin_code();
+        cout << "| " << std::left << std::setw(12) << client.get_balance();
+        cout << endl;
+    }
+
+    cout << "______________________________________________________________"
+         << "_____________________________________\n";
+}
