@@ -7,6 +7,7 @@ using std::string;
 
 namespace IO {
     string get_string(const string &message);
-}
+    float get_float(const string &message);
+} // namespace IO
 
-#endif //IO_HPP
+#endif // IO_HPP
