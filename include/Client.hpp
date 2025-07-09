@@ -43,7 +43,7 @@ public:
     void print_info() const;
 
     SaveResult save();
-    
+
     // Statics
     static bool is_exist(const string &account_id);
     static Client find(const string &account_id);
@@ -51,6 +51,7 @@ public:
     static void remove();
     static void update();
     static void list();
+    static void list_balances();
 
 private:
     string _account_id;

@@ -339,18 +339,17 @@ void Client::update() {
 void Client::list() {
     auto clients = load_clients_from_file();
 
-    cout << "\n\t\t\tclients (" << clients.size() << ")";
-    cout << "\n______________________________________________________________"
-         << "_____________________________________\n";
-
-    cout << "| " << std::left << std::setw(12) << "Account id";
-    cout << "| " << std::left << std::setw(20) << "Full Name";
-    cout << "| " << std::left << std::setw(12) << "Phone";
-    cout << "| " << std::left << std::setw(20) << "Email";
-    cout << "| " << std::left << std::setw(10) << "Pin Code";
-    cout << "| " << std::left << std::setw(12) << "Balance";
-    cout << "\n______________________________________________________________"
-         << "_____________________________________\n";
+    cout << "\n\t\t\tClients (" << clients.size() << ")";
+    Utils::print_separator(106);
+    Utils::print_row({
+            {"Account id", 12},
+            {"Full Name", 20},
+            {"Phone", 12},
+            {"Email", 20},
+            {"Pin Code", 10},
+            {"Balance", 12},
+    });
+    Utils::print_separator(106, false);
 
 
     if (clients.size() == 0) {
@@ -358,16 +357,47 @@ void Client::list() {
     }
 
     for (const Client &client: clients) {
-        cout << "| " << std::left << std::setw(12) << client.get_account_id();
-        cout << "| " << std::left << std::setw(20)
-             << client.get_first_name() + " " + client.get_last_name();
-        cout << "| " << std::left << std::setw(12) << client.get_phone();
-        cout << "| " << std::left << std::setw(20) << client.get_email();
-        cout << "| " << std::left << std::setw(10) << client.get_pin_code();
-        cout << "| " << std::left << std::setw(12) << client.get_balance();
-        cout << endl;
+        Utils::print_row({
+                {client.get_account_id(), 12},
+                {client.get_first_name() + " " + client.get_last_name(), 20},
+                {client.get_phone(), 12},
+                {client.get_email(), 20},
+                {client.get_pin_code(), 10},
+                {std::to_string(client.get_balance()), 12},
+        });
     }
 
-    cout << "______________________________________________________________"
-         << "_____________________________________\n";
+    Utils::print_separator(106, false);
+}
+
+void Client::list_balances() {
+    auto clients = load_clients_from_file();
+
+    cout << "\n\t\t\tClients (" << clients.size() << ")";
+    Utils::print_separator(54);
+    Utils::print_row({
+            {"Acount Id", 12},
+            {"Full Name", 20},
+            {"Balance", 12},
+    });
+    Utils::print_separator(54, false, true);
+
+    if (clients.size() == 0) {
+        cout << "There are no clients in the database.\n";
+    }
+
+    float total_balances = 0.0F;
+
+    for (const Client &client: clients) {
+        Utils::print_row({
+                {client.get_account_id(), 12},
+                {client.get_first_name() + " " + client.get_last_name(), 20},
+                {std::to_string(client.get_balance()), 12},
+        });
+
+        total_balances += client.get_balance();
+    }
+
+    Utils::print_separator(54, false);
+    cout << "Total Balances = " << total_balances;
 }
