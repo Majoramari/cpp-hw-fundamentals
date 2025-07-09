@@ -240,6 +240,21 @@ Client::SaveResult Client::save() {
         }
 
         append_client_to_file(*this);
+        return Client::SaveResult::SUCCEED;
+    }
+
+    if (_mode == Mode::REMOVE) {
+        auto clients = load_clients_from_file();
+
+        for (auto it = clients.begin(); it != clients.end(); ++it) {
+            if (it->get_account_id() == _account_id) {
+                clients.erase(it);
+                break;
+            }
+        }
+
+        save_clients_to_file(clients);
+        return Client::SaveResult::SUCCEED;
     }
 
     if (_mode == Mode::UPDATE) {
@@ -276,8 +291,8 @@ void Client::add() {
     client.save();
 }
 
-void Client::update() {
-    string account_id = IO::get_string("Enter your account number: ");
+void Client::remove() {
+    string account_id = IO::get_string("Enter account number: ");
 
     while (!is_exist(account_id)) {
         cout << "Client " << account_id << " doesn't exist\n";
@@ -287,11 +302,36 @@ void Client::update() {
     Client client = find(account_id);
 
     client.print_info();
+    std::cout << "\nConfirm deletion (y/n): ";
+    char answer = 'n';
+    std::cin >> answer;
+
+    if (tolower(answer) == 'y') {
+        auto clients = load_clients_from_file();
+
+        for (Client &client: clients) {
+            if (client.get_account_id() == account_id) {
+                client._mode = Mode::REMOVE;
+                client.save();
+                cout << "\nClient removed successfully";
+            }
+        }
+    }
+}
+
+void Client::update() {
+    string account_id = IO::get_string("Enter your account number: ");
+    while (!is_exist(account_id)) {
+        cout << "Client " << account_id << " doesn't exist\n";
+        account_id = IO::get_string("Enter your account number: ");
+    }
+
+    Client client = find(account_id);
+    client.print_info();
 
     std::cout << "\n\nUpdate Client Info:\n"
               << "-------------------\n";
 
     client.prompt_update_fields();
-
     client.save();
 }

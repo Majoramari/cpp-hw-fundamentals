@@ -18,7 +18,7 @@ private:
     };
 
 public:
-    enum class Mode { EMPTY, UPDATE, ADD_NEW };
+    enum class Mode { EMPTY, UPDATE, ADD_NEW, REMOVE };
 
     Client(string first_name,
            string last_name,
@@ -45,6 +45,7 @@ public:
     static bool is_exist(const string &account_id);
     static Client find(const string &account_id);
     static void add();
+    static void remove();
     static void update();
 
     SaveResult save();
