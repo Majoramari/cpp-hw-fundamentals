@@ -89,6 +89,28 @@ string Client::object_to_line(const Client &client) {
            + std::to_string(client._balance);
 }
 
+Client Client::prompt_add(const string &account_id) {
+    std::string email;
+    while (true) {
+        email = IO::get_string("Enter email: ");
+
+        if (email.find('@') != std::string::npos && email.find('.') != std::string::npos) {
+            break;
+        }
+
+        std::cout << "Invalid email; try again.\n";
+    }
+
+    return {IO::get_string("Enter first name: "),
+            IO::get_string("Enter last name: "),
+            email,
+            IO::get_string("Enter phone: "),
+            account_id,
+            IO::get_string("Enter pin code: "),
+            IO::get_float("Enter balance"),
+            Mode::ADD_NEW};
+}
+
 void Client::prompt_update_fields() {
     std::string first_name = IO::get_string("Enter first name: ");
     std::string last_name = IO::get_string("Enter last name: ");
@@ -132,6 +154,22 @@ void Client::save_clients_to_file(const vector<Client> &clients) {
     }
 
     for (Client client: clients) {
+        string line = object_to_line(client);
+        file << line << '\n';
+        if (file.fail()) {
+            throw std::runtime_error{"Failed to write to clients.txt"};
+        }
+    }
+}
+
+void Client::append_client_to_file(const Client &client) {
+    ofstream file("clients.txt", std::ios::app);
+
+    if (!file) {
+        throw std::runtime_error{"Could not open clients.txt"};
+    }
+
+    if (file.is_open()) {
         string line = object_to_line(client);
         file << line << '\n';
         if (file.fail()) {
@@ -196,6 +234,14 @@ Client::SaveResult Client::save() {
         return Client::SaveResult::FAIL_EMPTY_OBJ;
     }
 
+    if (_mode == Mode::ADD_NEW) {
+        if (Client::is_exist(_account_id)) {
+            return SaveResult::FAIL_ACC_ID_EXIST;
+        }
+
+        append_client_to_file(*this);
+    }
+
     if (_mode == Mode::UPDATE) {
         vector<Client> clients = load_clients_from_file();
 
@@ -211,6 +257,23 @@ Client::SaveResult Client::save() {
     }
 
     return Client::SaveResult::FAIL_UNKNOWN;
+}
+
+void Client::add() {
+    string account_id = IO::get_string("Enter account number: ");
+
+    while (is_exist(account_id)) {
+        cout << "Client " << account_id << " already exist\n";
+        account_id = IO::get_string("Enter account number: ");
+    };
+
+    Client client = prompt_add(account_id);
+
+    std::cout << "\n\nNew Client Add:\n"
+              << "-------------------\n";
+    client.print_info();
+
+    client.save();
 }
 
 void Client::update() {

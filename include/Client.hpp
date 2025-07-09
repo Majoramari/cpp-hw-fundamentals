@@ -13,11 +13,12 @@ private:
     enum class SaveResult {
         SUCCEED,
         FAIL_EMPTY_OBJ,
+        FAIL_ACC_ID_EXIST,
         FAIL_UNKNOWN,
     };
 
 public:
-    enum class Mode { EMPTY, UPDATE };
+    enum class Mode { EMPTY, UPDATE, ADD_NEW };
 
     Client(string first_name,
            string last_name,
@@ -43,6 +44,7 @@ public:
 
     static bool is_exist(const string &account_id);
     static Client find(const string &account_id);
+    static void add();
     static void update();
 
     SaveResult save();
@@ -58,6 +60,8 @@ private:
     static string object_to_line(const Client &client);
     static vector<Client> load_clients_from_file();
     static void save_clients_to_file(const vector<Client> &clients);
+    static void append_client_to_file(const Client &client);
+    static Client prompt_add(const string &account_id);
     void prompt_update_fields();
 };
 
