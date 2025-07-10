@@ -1,0 +1,14 @@
+{
+  "hash": "4a81c3b804bbf2f39445ea7782eec428fa529ac0b36ac0d4e799e7a6db1d83f6",
+  "prompts": [],
+  "consistency": {
+    "english": {
+      "localLanguage": "english",
+      "commitFix": "fix(server): change port to uppercase",
+      "commitFeat": "feat(server): allow port via environment variable",
+      "commitFixOmitScope": "fix: change port to uppercase",
+      "commitFeatOmitScope": "feat: allow port via environment variable",
+      "commitDescription": "Fix variable naming consistency by changing 'port' to 'PORT'."
+    }
+  }
+}
