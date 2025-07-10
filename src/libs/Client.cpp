@@ -206,6 +206,10 @@ Client Client::find(const string &account_id) {
     return {"", "", "", "", "", "", 0.0F, Mode::EMPTY};
 }
 
+vector<Client> Client::get_clients() {
+  return load_clients_from_file();
+}
+
 bool Client::is_exist(const string &account_id) {
     ifstream file("clients.txt");
     if (!file.is_open()) {
