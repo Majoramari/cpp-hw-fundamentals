@@ -1,6 +1,5 @@
 #include "Client.hpp"
 #include <fstream>
-#include <iomanip>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -399,5 +398,5 @@ void Client::list_balances() {
     }
 
     Utils::print_separator(54, false);
-    cout << "Total Balances = " << total_balances;
+    cout << "\t\t\tTotal Balances = " << total_balances;
 }
