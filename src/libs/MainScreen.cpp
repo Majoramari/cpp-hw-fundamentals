@@ -1,6 +1,8 @@
 #include "MainScreen.hpp"
 #include <iostream>
 #include <limits>
+#include <string>
+#include "Client.hpp"
 #include "IO.hpp"
 #include "Utils.hpp"
 
@@ -10,8 +12,7 @@ using std::cin;
 using std::cout;
 
 unsigned short MainScreen::get_user_choice() {
-    unsigned short choice =
-            IO::get_short_in_range("\t\tChoose an option [1-8]: ", 1, 8);
+    unsigned short choice = IO::get_short_in_range("\t\tChoose an option [1-8]: ", 1, 8);
     return choice;
 }
 
@@ -21,7 +22,11 @@ void MainScreen::back_to_main() {
     cin.get();
 }
 
-void MainScreen::show_client_list() { cout << "Client List"; }
+void MainScreen::show_client_list() {
+    auto clients = Client::get_clients();
+    screen_header("Client List Screen", "(" + std::to_string(clients.size()) + ") Client");
+    Client::list();
+}
 
 void MainScreen::add_client() { cout << "Add Client"; }
 
